@@ -29,7 +29,6 @@ bool Time::operator< (Time t2){
 	return ret;
 	return ret;
 }
-
 TimeLength Time::operator- (Time t2){
 	int newHours;
 	int newMins;
@@ -43,6 +42,9 @@ TimeLength Time::operator- (Time t2){
 			newMins = 60 + tempMins;
 			newHours -=1;
 		}
+	} else if (*this == t2){
+		newHours = 0;
+		newMins = 0;
 	} else {
 		newHours = t2.militaryHours - militaryHours;
 		if (t2.mins > mins || t2.mins == mins){
@@ -57,6 +59,7 @@ TimeLength Time::operator- (Time t2){
 	TimeLength length(newHours,newMins);
 	return length;
 }
+
 TimeLength Time::operator+ (Time t2){
 	int newHours = militaryHours + t2.militaryHours;
 	int newMins = mins + t2.mins;
