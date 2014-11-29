@@ -1,10 +1,14 @@
 #include "time.h"
 
 Time::Time(string t){
-	string h = t.substr(0,2); //create hour string
-	string m = t.substr(3,2); //create minutes string
+	int i = 0;
+	while (t[i] != ':'){
+		i++;
+	}
+	string h = t.substr(0,i); //create hour string
+	string m = t.substr(i,2); //create minutes string
 	string testAM = t.substr(5,2); //creates AM/PM string
-	AM = (testAM == "AM") ? true : false;
+	AM = (testAM == "am") ? true : false;
 	hours = atoi(h.c_str());
 	mins = atoi(m.c_str());
 	militaryHours = (AM) ? hours : hours + 12;
