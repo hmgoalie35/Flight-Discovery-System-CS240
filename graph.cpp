@@ -14,7 +14,6 @@ void Graph::add_flight (string cityInfo[], int size) {
 	Time arrival_time(cityInfo[3]);
 	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 2); 
 	cost = stof(costHolder); 
-	Time arrival_time(cityInfo[3]); 
 	if(!city_in_graph(departure_city)) cityList.push_back(departure_city);
 	if(!city_in_graph(destination_city)) cityList.push_back(destination_city);
 	Flight f(departure_city, destination_city, departure_time, arrival_time, cost);
