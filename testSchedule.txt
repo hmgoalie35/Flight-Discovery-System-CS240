@@ -29,7 +29,7 @@ KansasCity Chicago 6:22pm 8:35pm $83
 NewYork Detroit 8:08am 9:42am $102
 Detroit NewYork 10:22am 11:59am $102
 Detroit Chicago 10:35am 12:15pm $107
-Chicago Atlanta 5:43pm 10:55 pm $133
+Chicago Atlanta 5:43pm 10:55pm $133
 NewOrleans Houston 1:11pm 2:33pm $89
 NewOrleans Atlanta 10:11am 11:22am $74
 Atlanta NewOrleans 9:11am 10:31am $79
