@@ -54,7 +54,7 @@ bool checkDate (string input) {
 //checks if city is in the list of cities
 void Graph::add_city(string cityName){
 	bool in = false;
-    for (int i = 0; i < cityList.size(); i++){
+	for (int i = 0; i < cityList.size(); i++){
 		if (cityName == cityList[i].name) in = true;
 	}
 	if(!in){
