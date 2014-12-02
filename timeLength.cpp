@@ -62,4 +62,5 @@ TimeLength TimeLength::operator+ (TimeLength t2){
 
 ostream& operator<<(ostream &out, const TimeLength &t){
 	out << t.hours << ":" << t.mins;
+	return out;
 }
