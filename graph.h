@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "time.h"
-#include "flight.h"
+#include "Flight.h"
 
 using namespace std;
 

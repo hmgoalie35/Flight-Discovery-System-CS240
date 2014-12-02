@@ -7,8 +7,8 @@ Evan = "Young_Evan$(Assignment)"
 
 all:	Main
 
-Main:	clean Date.o time.o timeLength.o graph.o main.o
-	g++ Date.o time.o timeLength.o graph.o main.o -o fly
+Main:	clean Date.o time.o timeLength.o graph.o Flight.o main.o
+	g++ Date.o time.o timeLength.o graph.o Flight.o main.o -o fly
 
 Date.o:	Date.cpp
 	g++ $(FLAGS) -c Date.cpp -o Date.o
@@ -24,6 +24,9 @@ timeLength.o:	timeLength.cpp
 
 main.o:	fly.cpp
 	g++ $(FLAGS) -c fly.cpp -o main.o
+
+Flight.o:	Flight.cpp
+	g++ $(FLAGS) -c Flight.cpp -o Flight.o
 
 harris:	clean
 	git archive $(Branch) --format=tar.gz -5 --output $(Harris)
