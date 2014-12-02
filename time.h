@@ -11,6 +11,7 @@ using namespace std;
 class Time {
 
 	public:
+		Time();
 		Time(string t);
 		Time(int newHours,int newMins,bool newAM);
 		bool operator== (Time t2);
