@@ -21,7 +21,10 @@ class Graph {
 		Graph ();										//constructor
 		~Graph ();										//destructor
 		void add_flight (string cityInfo[], int size);	//add flight info to graph. check if city already exists
+		void add_city (string cityName);
+		int city_pos (string cityName);
 		bool city_in_graph (string city);
+		
 		/*=checks if user input matches info in graph. returns true or false=*/
 		bool set_depart_city (string user_choice);
 		bool set_destination (string user_choice);
@@ -54,7 +57,7 @@ class Graph {
 		string user_return_time;
 		/*=========================*/
 
-		vector<string> cityList;
+		vector<City> cityList;
 };
 
 #endif

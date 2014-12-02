@@ -4,7 +4,14 @@
 Graph::Graph () { }
 
 //destructor
-Graph::~Graph () { }
+Graph::~Graph () {
+	for (int i = 0; i < cityList.size(); i++ ){
+		for (int j = 0; j < cityList[i].flightList.size(); j++ ){
+			delete &(cityList[i].flightList[j]);
+		}
+		delete &cityList[i];
+	}
+}
 
 //adds flight info to graph. checks if city already exists
 void Graph::add_flight (string cityInfo[], int size) {
@@ -14,12 +21,13 @@ void Graph::add_flight (string cityInfo[], int size) {
 	Time arrival_time(cityInfo[3]);
 	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 2); 
 	cost = stof(costHolder); 
-	if(!city_in_graph(departure_city)) cityList.push_back(departure_city);
-	if(!city_in_graph(destination_city)) cityList.push_back(destination_city);
-	Flight f(departure_city, destination_city, departure_time, arrival_time, cost);
+	add_city(departure_city);
+	add_city(destination_city);
+	Flight * f = new Flight(departure_city, destination_city, departure_time, arrival_time, cost);
+	cityList[city_pos(departure_city)].flightList.push_back(*f);
 }		
 
-bool checkSyntax(string input) {
+bool checkSyntax (string input) {
 	for (size_t i = 0; i < input.size(); i++) {
 		if (input.at(i) == ' ' || isdigit(input.at(i))) {
 			cout << "Enter inputs without numbers or spaces. ";
@@ -29,11 +37,11 @@ bool checkSyntax(string input) {
 	return true;
 }
 
-bool checkTime(string input) {
+bool checkTime (string input) {
 
 }
 
-bool checkDate(string input) {
+bool checkDate (string input) {
 	for (size_t i = 0; i < input.size(); i++) {
 		if (input.at(i) == ' ' || isalpha(input.at(i))) {
 			cout << "Enter inputs without letters or spaces. ";
@@ -41,15 +49,27 @@ bool checkDate(string input) {
 		}
 	}
 	return true;
-//checks if city is in the list of cities
-bool Graph::city_in_graph(string city){
-	bool ret = false;
-	for (int i = 0; i < cityList.size(); i++){
-		if (city == cityList[i]) ret = true;
-	}
-	return ret;
 }
-
+	
+//checks if city is in the list of cities
+void Graph::add_city(string cityName){
+	bool in = false;
+    for (int i = 0; i < cityList.size(); i++){
+		if (cityName == cityList[i].name) in = true;
+	}
+	if(!in){
+		City * city = new City();
+		city->name = cityName;
+		cityList.push_back(*city);
+	}
+}
+int Graph::city_pos(string cityName){
+	int i;
+	for (i = 0; i < cityList.size(); i++){
+		if (cityName == cityList[i].name) break;
+	}
+	return i;
+}
 //checks if city user wants to depart from exists and then sets variable
 bool Graph::set_depart_city (string user_choice) {
 	if (!(checkSyntax(user_choice))) return false;
