@@ -45,7 +45,6 @@ int main (int argc, char* argv[]) {
    }
    
    //ask for user input. check if input matches known cities / correct time and date format
-   //fix only take one word per input
    do {
       cout << "Enter departure city:" << endl;
       getline(cin, choice);
@@ -57,7 +56,7 @@ int main (int argc, char* argv[]) {
    } while (!(g.set_destination(choice)));
 
    do {
-      cout << "Enter departure date:" << endl;
+      cout << "Enter departure date (DD/MM/YYYY):" << endl;
       getline(cin, choice);
    } while (!(g.set_depart_date(choice)));
 
@@ -72,7 +71,7 @@ int main (int argc, char* argv[]) {
    } while (!(g.set_return_date(choice)));
 
    do {
-      cout << "Enter earliest acceptable return time:" << endl;
+      cout << "Enter earliest acceptable return time (DD/MM/YYYY):" << endl;
       getline(cin, choice);
    } while (!(g.set_return_time(choice)));
       
@@ -93,24 +92,27 @@ int main (int argc, char* argv[]) {
 			if (choice == "J") { 
             cout << "Just Get Me There Today itinerary selected" << endl;
             g.j_itin();
-			}	
+            break;		
+         }	
 			if (choice == "F") {
             cout << "Fewest Hops itinerary selected" << endl;
             g.f_itin();
-			}	
+	         break;	
+      	}	
 	  		if (choice == "S") {
             cout << "Shortest Trip itinerary selected" << endl;
             g.s_itin();
+            break;
 			}
 			if (choice == "C") { 
             cout << "Cheapest itinerary selected" << endl;
             g.c_itin();
+            break;
 			}
          if (choice == "P") { 
             cout << "Printing daily flight schedule..." << endl;
             g.print_flight_sched();
          }
-			break;
 		}
    }
    return 1;
