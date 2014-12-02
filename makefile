@@ -1,29 +1,38 @@
-PROJECT = Program_3
-TARGET = fly
+FLAGS = -g -Wall -std=c++11
+Assignment = "_Lab8.tar.gz"
+Branch = "master"
+Conor = "Cunningham_Conor$(Assignment)"
+Harris = "Pittinsky_Harris$(Assignment)"
+Evan = "Young_Evan$(Assignment)"
 
-SRC_FILES = \
-  Makefile \
-  fly.cpp \
-  flight.cpp
+all:	Main
 
-OBJ_FILES = \
-  fly.o \
-  flight.o
+Main:	clean Date.o time.o timeLength.o flight.o main.o
+	g++ Date.o time.o timeLength.o flight.o main.o -o fly
 
-HDR_FILES = \
-  flight.h
-CC = g++
-CFLAGS = -g -Wall 
+Date.o:	Date.cpp
+	g++ $(FLAGS) -c Date.cpp -o Date.o
 
-$(TARGET):  	$(OBJ_FILES)
-		$(CC) $(OBJ_FILES) -g -o $@
+Flight.o:	flight.cpp
+	g++ $(FLAGS) -c flight.cpp -o flight.o
 
-$(PROJECT).tar.gz \
-dist:		$(SRC_FILES)
-		tar -cvvf $(PROJECT).tar $(SRC_FILES)
-		gzip $(PROJECT).tar
+time.o:	time.cpp
+		g++ $(FLAGS) -c time.cpp -o time.o
+
+timeLength.o:	timeLength.cpp
+		g++ $(FLAGS) -c timeLength.cpp -o timeLength.o
+
+main.o:	fly.cpp
+	g++ $(FLAGS) -c fly.cpp -o Fly.o
+
+harris:	clean
+	git archive $(Branch) --format=tar.gz -5 --output $(Harris)
+
+conor:	clean
+	git archive $(Branch) --format=tar.gz -5 --output $(Conor)
+
+evan:	clean
+	git archive $(Branch) --format=tar.gz -5 --output $(Evan)
 
 clean:
-		rm -f $(TARGET) *.o *~
-
-
+	rm -f *.o *.exe fly
