@@ -11,8 +11,9 @@ void Graph::add_flight (string cityInfo[], int size) {
 	departure_city = cityInfo[0];
 	destination_city = cityInfo[1];
 	Time departure_time(cityInfo[2]);
-	Time arrival_time(cityInfo[3]); 
-	cost = stof(cityInfo[4]);
+	Time arrival_time(cityInfo[3]);
+	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 2); 
+	cost = stof(costHolder); 
 }		
 
 //checks if city user wants to depart from exists and then sets variable
