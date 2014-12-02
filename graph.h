@@ -1,8 +1,9 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <string.h>
+#include <string>
 #include <iostream>
+#include "time.h"
 
 using namespace std;
 
@@ -32,9 +33,7 @@ class Graph {
 
 		/*====values from file=====*/		
 		string departure_city;
-		string destination_city;
-		string departure_time;
-		string arrival_time; 
+		string destination_city; 
 		float cost; 
 		/*=========================*/
 

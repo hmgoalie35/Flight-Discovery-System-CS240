@@ -1,31 +1,18 @@
 #include "graph.h"
-#include "Date.h"
-#include "time.h"
 
 //constructor
-Graph::Graph () { 
-
-}
+Graph::Graph () { }
 
 //destructor
 Graph::~Graph () { }
 
 //adds flight info to graph. checks if city already exists
 void Graph::add_flight (string cityInfo[], int size) {
-	for (int i = 0; i < size; i++) {
-		cout << cityInfo[i]; 
-	}
-	cout << endl;
 	departure_city = cityInfo[0];
 	destination_city = cityInfo[1];
-	departure_time = cityInfo[2];
-	arrival_time = cityInfo[3]; 
-	//cost = stof((cityInfo[4]).c_str());
-	//check if depart city exists
-	//check if destination city exists
-	//if not, create new city node.
-	//create new time object. give time and cost to city node
-	//if they exist, give time and cost to existing city node 
+	Time departure_time(cityInfo[2]);
+	Time arrival_time(cityInfo[3]); 
+	cost = stof(cityInfo[4]);
 }		
 
 //checks if city user wants to depart from exists and then sets variable

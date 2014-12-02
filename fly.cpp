@@ -2,8 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <cctype>
-#include "flight.h"
+#include "graph.h"
 using namespace std;
 
 int main (int argc, char* argv[]) {
@@ -13,7 +12,7 @@ int main (int argc, char* argv[]) {
    const int flight_info_per_line = 5;         
    string flight_info[flight_info_per_line];         
    string str_buff; 
-   Flight f;              
+   Graph g;              
 
    //check if command line input is given correctly
    if (argc != 2) {
@@ -42,39 +41,40 @@ int main (int argc, char* argv[]) {
          flight_info[i] = s;
          i++;
       }
-      f.add_flight(flight_info, flight_info_per_line);
+      g.add_flight(flight_info, flight_info_per_line);
    }
    
    //ask for user input. check if input matches known cities / correct time and date format
+   //fix only take one word per input
    do {
       cout << "Enter departure city:" << endl;
-      cin >> choice; 
-   } while (!(f.set_depart_city(choice)));                      
+      getline(cin, choice);
+   } while (!(g.set_depart_city(choice)));                      
 
    do {
       cout << "Enter destination city:" << endl;
-      cin >> choice; 
-   } while (!(f.set_destination(choice)));
+      getline(cin, choice);
+   } while (!(g.set_destination(choice)));
 
    do {
       cout << "Enter departure date:" << endl;
-      cin >> choice; 
-   } while (!(f.set_depart_date(choice)));
+      getline(cin, choice);
+   } while (!(g.set_depart_date(choice)));
 
    do {
       cout << "Enter earliest acceptable departure time:" << endl;
-      cin >> choice; 
-   } while (!(f.set_depart_time(choice)));
+      getline(cin, choice);
+   } while (!(g.set_depart_time(choice)));
 
    do {
       cout << "Enter return date:" << endl;
-      cin >> choice; 
-   } while (!(f.set_return_date(choice)));
+      getline(cin, choice);
+   } while (!(g.set_return_date(choice)));
 
    do {
       cout << "Enter earliest acceptable return time:" << endl;
-      cin >> choice; 
-   } while (!(f.set_return_time(choice)));
+      getline(cin, choice);
+   } while (!(g.set_return_time(choice)));
       
    while(1) {
 
@@ -92,23 +92,23 @@ int main (int argc, char* argv[]) {
 	   } else {
 			if (choice == "J") { 
             cout << "Just Get Me There Today itinerary selected" << endl;
-            f.j_itin();
+            g.j_itin();
 			}	
 			if (choice == "F") {
             cout << "Fewest Hops itinerary selected" << endl;
-            f.f_itin();
+            g.f_itin();
 			}	
 	  		if (choice == "S") {
             cout << "Shortest Trip itinerary selected" << endl;
-            f.s_itin();
+            g.s_itin();
 			}
 			if (choice == "C") { 
             cout << "Cheapest itinerary selected" << endl;
-            f.c_itin();
+            g.c_itin();
 			}
          if (choice == "P") { 
             cout << "Printing daily flight schedule..." << endl;
-            f.print_flight_sched();
+            g.print_flight_sched();
          }
 			break;
 		}
