@@ -3,9 +3,17 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include "time.h"
+#include "flight.h"
 
 using namespace std;
+
+struct City {
+	string name;
+	vector<Flight> flightList;
+};
+
 
 class Graph {
 	
@@ -13,7 +21,7 @@ class Graph {
 		Graph ();										//constructor
 		~Graph ();										//destructor
 		void add_flight (string cityInfo[], int size);	//add flight info to graph. check if city already exists
-
+		bool city_in_graph (string city);
 		/*=checks if user input matches info in graph. returns true or false=*/
 		bool set_depart_city (string user_choice);
 		bool set_destination (string user_choice);
@@ -45,6 +53,8 @@ class Graph {
 		string user_return_date;
 		string user_return_time;
 		/*=========================*/
+
+		vector<string> cityList;
 };
 
 #endif
