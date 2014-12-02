@@ -1,5 +1,8 @@
 #include "time.h"
 
+Time::Time(){
+	
+}
 Time::Time(string t) : daysPast(0){
 	int i = 0;
 	while (t[i] != ':'){
