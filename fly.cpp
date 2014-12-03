@@ -112,6 +112,7 @@ int main (int argc, char* argv[]) {
          if (choice == "P") { 
             cout << "Printing daily flight schedule..." << endl;
             g.print_flight_sched();
+            break;
          }
 		}
    }
