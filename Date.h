@@ -18,6 +18,7 @@ public:
     //checks if implicit param comes after date param.
     bool operator>(const Date&);
 private:
+    //store the month, day, year.
     int month, day, year;
 };
 #endif
