@@ -23,6 +23,7 @@ class Flight{
 	    string destination, departure;
 	    float cost;
 	    Time departure_time, arrival_time;
+	    TimeLength flight_duration;
 
 };
 

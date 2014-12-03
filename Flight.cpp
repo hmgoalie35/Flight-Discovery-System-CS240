@@ -6,10 +6,11 @@ Flight::Flight(string the_departure, string the_destination, Time the_departure_
     cost = the_cost;
     departure_time = the_departure_time;
     arrival_time = the_arrival_time;
+    flight_duration = arrival_time - departure_time;
 }
 
 ostream& operator<< (ostream& out, Flight& flight) {
-    out << "Departure: " << flight.departure << "\nDestination: " << flight.destination << "\nDeparture Time: " << flight.departure_time << "\nArrival Time: " << flight.arrival_time << "\nCost: $" << flight.cost << "\nTrip Time: " << (flight.arrival_time - flight.departure_time)  << endl;
+    out << "Departure: " << flight.departure << "\nDestination: " << flight.destination << "\nDeparture Time: " << flight.departure_time << "\nArrival Time: " << flight.arrival_time << "\nCost: $" << flight.cost << "\nTrip Time: " << flight.flight_duration  << endl;
     return out;
 }
 
