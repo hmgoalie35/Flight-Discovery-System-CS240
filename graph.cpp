@@ -64,7 +64,7 @@ bool checkSyntax (string input) {
 }
 
 bool checkTime (string input) {
-	if (input.size() != 7 || input.at(2) != ':' || (input.at(5) != 'a' || input.at(5) != 'p') || input.at(6) != 'm') {
+	if (input.size() != 7 || input.at(2) != ':' || (input.at(5) != 'a' && input.at(5) != 'p') || input.at(6) != 'm') {
 		cout << "Enter time in correct format. ";
 		return false;
 	}
