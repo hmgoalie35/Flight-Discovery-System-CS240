@@ -9,12 +9,7 @@ Graph::Graph() { }
 
 //destructor
 Graph::~Graph() {
-	for (size_t i = 0; i < cityList.size(); i++ ){
-		for (size_t j = 0; j < cityList[i].flightList.size(); j++ ){
-			delete &(cityList[i].flightList[j]);
-		}
-		delete &cityList[i];
-	}
+
 }
 
 //adds flight info to graph. checks if city already exists
@@ -26,9 +21,9 @@ void Graph::add_flight (string cityInfo[], int size) {
 	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 2); 
 	cost = stof(costHolder); 
 	add_city(departure_city);
-	add_city(destination_city);
-	Flight * f = new Flight(departure_city, destination_city, departure_time, arrival_time, cost);
-	cityList[city_pos(departure_city)].flightList.push_back(*f);
+	//add_city(destination_city);
+	Flight f = Flight(departure_city, destination_city, departure_time, arrival_time, cost);
+	cityList[city_pos(departure_city)].flightList.push_back(f);
 }		
 
 //checks if city is in the list of cities
@@ -38,9 +33,9 @@ void Graph::add_city(string cityName) {
 		if (cityName == cityList[i].name) in = true;
 	}
 	if(!in) {
-		City * city = new City();
-		city->name = cityName;
-		cityList.push_back(*city);
+		City city = City();
+		city.name = cityName;
+		cityList.push_back(city);
 	}
 }
 
