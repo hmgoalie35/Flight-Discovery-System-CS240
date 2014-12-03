@@ -9,7 +9,7 @@ Flight::Flight(string the_departure, string the_destination, Time the_departure_
 }
 
 ostream& operator<< (ostream& out, const Flight& flight) {
-    out << "Departure: " << flight.departure << "\nDestination: " << flight.destination << "\nDeparture Time: " << flight.departure_time << "\nArrival Time: " << flight.arrival_time << "\nCost: " << flight.cost << endl;
+    out << "Departure: " << flight.departure << "\nDestination: " << flight.destination << "\nDeparture Time: " << flight.departure_time << "\nArrival Time: " << flight.arrival_time << "\nCost: $" << flight.cost << endl;
     return out;
 }
 
@@ -26,6 +26,6 @@ bool Flight::operator== (const Flight& flight) {
     return (destination == flight.destination && departure == flight.departure && cost == flight.cost && departure_time == flight.departure_time && arrival_time == flight.arrival_time);
 }
 
-Flight::~Flight() {
+// Flight::~Flight() {
 
-}
+// }
