@@ -1,5 +1,7 @@
 #include "timeLength.h"
 
+TimeLength::TimeLength(){}
+
 TimeLength::TimeLength(int hours, int mins): hours(hours), mins(mins)
 {}
 bool TimeLength::operator== (TimeLength t2){

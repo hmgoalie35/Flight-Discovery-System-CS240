@@ -8,6 +8,7 @@ using namespace std;
 
 class TimeLength {
 	public:
+		TimeLength();
 		TimeLength(int hours, int mins);
 		int hours;
 		int mins;
