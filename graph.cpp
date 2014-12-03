@@ -18,7 +18,7 @@ void Graph::add_flight (string cityInfo[], int size) {
 	destination_city = cityInfo[1];
 	Time departure_time(cityInfo[2]);
 	Time arrival_time(cityInfo[3]);
-	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 2); 
+	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 1); 
 	cost = stof(costHolder); 
 	add_city(departure_city);
 	//add_city(destination_city);
@@ -163,8 +163,35 @@ bool Graph::set_return_time (string user_choice) {
 
 //print entire flight schedule
 void Graph::print_flight_sched () {
-
+	vector<City>::iterator it;
+	for(it = cityList.begin(); it != cityList.end(); it++){
+		for(vector<Flight>::iterator i = it->flightList.begin(); i != it->flightList.end(); i++){
+			cout << *i << endl;
+		}
+	}
+	//depthFirstSearch(0);
 }
+
+
+// void Graph::depthFirstSearch(int start){
+//   vector<bool> unvisited(cityList.size(), true);
+//   depthFirstSearchAux(start, unvisited);
+// }
+
+// void Graph::depthFirstSearchAux(int start, vector<bool> & unvisited)
+// {
+//   // Add statements here to process myAdjacencyLists[start].data
+//   cout << cityList[start].name << endl;
+
+//   unvisited[start] = false;
+//   // Traverse its adjacency list, performing depth-first 
+//   // searches from each unvisited vertex in it.
+//   for (vector<Flight>::iterator it = cityList[start].flightList.begin(); it != cityList[start].flightList.end(); it++)
+//     // check if current vertex has been visited
+//     if (unvisited[*it])
+//       // start DFS from new node
+//       depthFirstSearchAux(*it, unvisited); 
+//   }
 
 void Graph::j_itin () {
 	cout << "J function call not yet implemented." << endl;

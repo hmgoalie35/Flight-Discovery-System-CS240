@@ -26,6 +26,9 @@ class Graph {
 		void add_flight (string cityInfo[], int size);	//add flight info to graph. check if city already exists
 		void add_city (string cityName);
 		int city_pos (string cityName);
+
+		void depthFirstSearchAux(int, vector<bool>&);
+		void depthFirstSearch(int start);
 		
 		/*=checks if user input matches info in graph. returns true or false=*/
 		bool set_depart_city (string user_choice);
