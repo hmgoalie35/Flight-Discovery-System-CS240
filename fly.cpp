@@ -66,12 +66,12 @@ int main (int argc, char* argv[]) {
    } while (!(g.set_depart_time(choice)));
 
    do {
-      cout << "Enter return date:" << endl;
+      cout << "Enter return date (DD/MM/YYYY):" << endl;
       getline(cin, choice);
    } while (!(g.set_return_date(choice)));
 
    do {
-      cout << "Enter earliest acceptable return time (DD/MM/YYYY):" << endl;
+      cout << "Enter earliest acceptable return time:" << endl;
       getline(cin, choice);
    } while (!(g.set_return_time(choice)));
       
