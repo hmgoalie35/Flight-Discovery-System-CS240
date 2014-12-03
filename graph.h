@@ -6,17 +6,20 @@
 #include <vector>
 #include "time.h"
 #include "Flight.h"
+#include "Date.h"
 
 using namespace std;
 
-struct City {
-	string name;
-	vector<Flight> flightList;
-};
+
 
 
 class Graph {
 	
+	struct City {
+		string name;
+		vector<Flight> flightList;
+	};
+
 	public:
 		Graph ();										//constructor
 		~Graph ();										//destructor
@@ -45,15 +48,17 @@ class Graph {
 		string departure_city;
 		string destination_city; 
 		float cost; 
+		//time objects created in function calls
 		/*=========================*/
 
 		/*====user given values====*/
 		string user_depart_city;
 		string user_destination_city;
-		string user_depart_date;
-		string user_depart_time;
-		string user_return_date;
-		string user_return_time;
+		Date user_return_date;
+		Date user_depart_date;
+		Time user_depart_time;
+		Time user_return_time;
+		//time objects created in function calls
 		/*=========================*/
 
 		vector<City> cityList;
