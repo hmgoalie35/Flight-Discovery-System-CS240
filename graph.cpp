@@ -1,9 +1,5 @@
 #include "graph.h"
-/*
-FIX: time constraints
-	 same city being inputted
 
-*/
 //constructor
 Graph::Graph() { }
 
@@ -21,7 +17,7 @@ void Graph::add_flight (string cityInfo[], int size) {
 	string costHolder = (cityInfo[4]).substr(1, (cityInfo[4]).size() - 1); 
 	cost = stof(costHolder); 
 	add_city(departure_city);
-	//add_city(destination_city);
+	add_city(destination_city);
 	Flight f = Flight(departure_city, destination_city, departure_time, arrival_time, cost);
 	cityList[city_pos(departure_city)].flightList.push_back(f);
 }		
@@ -39,6 +35,7 @@ void Graph::add_city(string cityName) {
 	}
 }
 
+//finds position of city within citylist vector
 int Graph::city_pos(string cityName) {
 	size_t i;
 	for (i = 0; i < cityList.size(); i++) {
@@ -58,10 +55,30 @@ bool checkSyntax (string input) {
 	return true;
 }
 
+//checks that time is valid and correct format
 bool checkTime (string input) {
-	if (input.size() != 7 || input.at(2) != ':' || (input.at(5) != 'a' && input.at(5) != 'p') || input.at(6) != 'm') {
+	int hour, minute;
+	if (input.size() != 7 && input.size() != 6) {
 		cout << "Enter time in correct format. ";
 		return false;
+	}
+	if (input.size() == 7) {
+		if (input.at(2) != ':' || (input.at(5) != 'a' && input.at(5) != 'p') || input.at(6) != 'm') {
+			cout << "Enter time in correct format. ";
+			return false;
+		} else {
+			hour = stoi(input.substr(0,2)); 
+			minute = stoi(input.substr(3,2)); 
+		}
+	}
+	if (input.size() == 6) {
+		if (input.at(1) != ':' || (input.at(4) != 'a' && input.at(4) != 'p') || input.at(5) != 'm') {
+			cout << "Enter time in correct format. ";
+			return false;
+		} else {
+			hour = stoi(input.substr(0,1)); 
+			minute = stoi(input.substr(2,1)); 
+		}
 	}
 	for (size_t i = 0; i < input.size() - 2; i++) {
 		if (input.at(i) == ' ' || isalpha(input.at(i))) {
@@ -69,8 +86,6 @@ bool checkTime (string input) {
 			return false;
 		}
 	}
-	int hour = stoi(input.substr(0,2)); 
-	int minute = stoi(input.substr(3,2)); 
 	if (!(hour >= 1 && hour <= 12) || !(minute >= 0 && minute <= 60)) {
 		cout << "Enter acceptalble time. ";
 		return false;
@@ -78,6 +93,7 @@ bool checkTime (string input) {
 	return true;
 }
 
+//checks date is correct format and is valid
 bool checkDate (string input) {
 	if (input.size() != 10 || (input.at(2) != '/' || input.at(5) != '/')) {
 		cout << "Enter input in correct format. ";
@@ -102,17 +118,27 @@ bool checkDate (string input) {
 //checks if city user wants to depart from exists and then sets variable
 bool Graph::set_depart_city (string user_choice) {
 	if (!(checkSyntax(user_choice))) return false;
-	//check if city has flights
-	user_depart_city = user_choice;
-	return true;
+	for (size_t i = 0; i < cityList.size(); i++) {
+		if (user_choice == cityList[i].name) {
+			user_depart_city = user_choice;
+			return true;
+		}
+	}
+	cout << "City is not listed in flight schedule. ";
+	return false;
 }
 
-//checks if city user wants to travel to exists and then sets variable
+//checks if city user wants to travel to exists, is not depart city,	 then sets variable
 bool Graph::set_destination (string user_choice) {
 	if (!(checkSyntax(user_choice))) return false;
-	//check that destination != departure city
-	user_destination_city = user_choice;
-	return true;
+	for (size_t i = 0; i < cityList.size(); i++) {
+		if (user_choice == cityList[i].name && user_choice != user_depart_city) {
+			user_destination_city = user_choice;
+			return true;
+		}
+	}
+	cout << "City is not listed in flight schedule or city is same as departure city. ";
+	return false;
 }
 
 //checks if departure date is possible, checks syntax, then sets variable
