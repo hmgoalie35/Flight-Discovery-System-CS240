@@ -13,7 +13,7 @@ class Flight{
 	
 	public:
 	    Flight(string, string, Time, Time, float);
-	   // ~Flight();
+	    ~Flight();
 	    friend ostream& operator<<(ostream&,  Flight&);
 	    bool operator<(const Flight&);
 	    bool operator>(const Flight&);

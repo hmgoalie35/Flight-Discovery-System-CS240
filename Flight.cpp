@@ -27,6 +27,6 @@ bool Flight::operator== (const Flight& flight) {
     return (destination == flight.destination && departure == flight.departure && cost == flight.cost && departure_time == flight.departure_time && arrival_time == flight.arrival_time);
 }
 
-// Flight::~Flight() {
+Flight::~Flight() {
 
-// }
+}
