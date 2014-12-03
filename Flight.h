@@ -14,7 +14,7 @@ class Flight{
 	public:
 	    Flight(string, string, Time, Time, float);
 	   // ~Flight();
-	    friend ostream& operator<<(ostream&, const Flight&);
+	    friend ostream& operator<<(ostream&,  Flight&);
 	    bool operator<(const Flight&);
 	    bool operator>(const Flight&);
 	    bool operator==(const Flight&);

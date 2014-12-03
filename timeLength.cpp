@@ -9,7 +9,7 @@ bool TimeLength::operator> (TimeLength t2){
 	bool ret = true;
 	if (hours == t2.hours){
 		if (mins < t2.mins || mins == t2.mins){
-		 ret = false;
+			ret = false;
 		}
 	} else if (hours < t2.hours) ret = false;
 	return ret;
@@ -19,7 +19,7 @@ bool TimeLength::operator< (TimeLength t2){
 	bool ret = true;
 	if (hours == t2.hours){
 		if (mins > t2.mins || mins == t2.mins){
-		 ret = false;
+			ret = false;
 		}
 	} else if (hours > t2.hours) ret = false;
 	return ret;
@@ -61,6 +61,14 @@ TimeLength TimeLength::operator+ (TimeLength t2){
 }
 
 ostream& operator<<(ostream &out, const TimeLength &t){
-	out << t.hours << ":" << t.mins;
+	if(t.hours == 1 && t.mins == 1){
+		out << t.hours << " Hour " << t.mins << " Minute";
+	}else if(t.hours == 1 && t.mins != 1){
+		out << t.hours << " Hour " << t.mins << " Minutes";
+	}else if(t.hours != 1 && t.mins == 1){
+		out << t.hours << " Hours " << t.mins << " Minute";
+	}else if(t.hours != 1 && t.mins != 1){
+		out << t.hours << " Hours " << t.mins << " Minutes";
+	}
 	return out;
 }

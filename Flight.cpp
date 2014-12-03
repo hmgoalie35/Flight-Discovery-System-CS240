@@ -8,8 +8,8 @@ Flight::Flight(string the_departure, string the_destination, Time the_departure_
     arrival_time = the_arrival_time;
 }
 
-ostream& operator<< (ostream& out, const Flight& flight) {
-    out << "Departure: " << flight.departure << "\nDestination: " << flight.destination << "\nDeparture Time: " << flight.departure_time << "\nArrival Time: " << flight.arrival_time << "\nCost: $" << flight.cost << endl;
+ostream& operator<< (ostream& out, Flight& flight) {
+    out << "Departure: " << flight.departure << "\nDestination: " << flight.destination << "\nDeparture Time: " << flight.departure_time << "\nArrival Time: " << flight.arrival_time << "\nCost: $" << flight.cost << "\nTrip Time: " << (flight.departure_time - flight.arrival_time)  << endl;
     return out;
 }
 
