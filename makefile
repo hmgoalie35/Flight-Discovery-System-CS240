@@ -29,13 +29,18 @@ Flight.o:	Flight.cpp
 	g++ $(FLAGS) -c Flight.cpp -o Flight.o
 
 harris:	clean
+	git checkout master && git pull
 	git archive $(Branch) --format=tar.gz -5 --output $(Harris)
+	git checkout -
 
 conor:	clean
+	git checkout master && git pull
 	git archive $(Branch) --format=tar.gz -5 --output $(Conor)
+	git checkout -
 
 evan:	clean
+	git checkout master && git pull
 	git archive $(Branch) --format=tar.gz -5 --output $(Evan)
-
+	git checkout -
 clean:
 	rm -f *.o *.exe fly
