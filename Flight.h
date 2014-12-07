@@ -30,6 +30,8 @@ class Flight{
 		TimeLength get_flight_duration();
 		//get departure city
 		string get_departure_city();
+		//get destination city
+		string get_destination_city();
 		//set visited to new value
 		void set_visited(bool);
 		//check if flight was visited.

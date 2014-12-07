@@ -47,6 +47,11 @@ string Flight::get_departure_city(){
     return departure;
 }
 
+//return destination city
+string Flight::get_destination_city(){
+    return destination;
+}
+
 //mark this flight as visited or not visited.
 void Flight::set_visited(bool new_value){
     visited = new_value;
