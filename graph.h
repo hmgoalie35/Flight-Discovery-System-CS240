@@ -19,6 +19,7 @@ class Graph {
 	struct City {
 		string name;
 		vector<Flight> flightList;
+		bool visited;
 	};
 
 	public:

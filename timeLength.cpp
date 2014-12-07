@@ -4,10 +4,10 @@ TimeLength::TimeLength(){}
 
 TimeLength::TimeLength(int hours, int mins): hours(hours), mins(mins)
 {}
-bool TimeLength::operator== (TimeLength t2){
+bool TimeLength::operator== (TimeLength t2) const{
 	return (hours == t2.hours && mins == t2.mins);
 }
-bool TimeLength::operator> (TimeLength t2){
+bool TimeLength::operator> (TimeLength t2) const{
 	bool ret = true;
 	if (hours == t2.hours){
 		if (mins < t2.mins || mins == t2.mins){
@@ -17,7 +17,7 @@ bool TimeLength::operator> (TimeLength t2){
 	return ret;
 }
 
-bool TimeLength::operator< (TimeLength t2){
+bool TimeLength::operator< (TimeLength t2) const{
 	bool ret = true;
 	if (hours == t2.hours){
 		if (mins > t2.mins || mins == t2.mins){

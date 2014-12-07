@@ -12,9 +12,9 @@ class TimeLength {
 		TimeLength(int hours, int mins);
 		int hours;
 		int mins;
-		bool operator== (TimeLength t2);
-		bool operator> (TimeLength t2);
-		bool operator< (TimeLength t2);
+		bool operator== (TimeLength t2) const;
+		bool operator> (TimeLength t2) const;
+		bool operator< (TimeLength t2) const;
 		TimeLength operator- (TimeLength t2);
 		TimeLength operator+ (TimeLength t2);
 

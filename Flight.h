@@ -21,11 +21,19 @@ class Flight{
 		//prints a flight object.
 		friend ostream& operator<<(ostream&, const Flight&);
 		//see if flights has a shorter duration
-		bool operator<(const Flight&);
+		bool operator<(const Flight&) const;
 		//see if flights has a longer duration
-		bool operator>(const Flight&);
+		bool operator>(const Flight&) const;
 		//check if flights have the same duration
-		bool operator==(const Flight&);
+		bool operator==(const Flight&) const;
+		//get flight duration
+		TimeLength get_flight_duration();
+		//get departure city
+		string get_departure_city();
+		//set visited to new value
+		void set_visited(bool);
+		//check if flight was visited.
+		bool was_visited();
 
 	private:
 		//store the departure, destination city
@@ -36,6 +44,8 @@ class Flight{
 	    Time departure_time, arrival_time;
 	    //store the flight duration
 	    TimeLength flight_duration;
+	    //if we have already checked this flight for shortest path, etc.
+	    bool visited;
 
 };
 
