@@ -248,16 +248,13 @@ void Graph::breadthFirst (const string &departCity, const string &retCity, const
 	int retCityPos = city_pos(retCity);									//get position of retCity in cityList
 	deque<string> cityDeque;											//create queue of cities to visit
 	cityDeque.push_back(departCity);									//put start city in queue
-	while ( cityLabels[retCityPos] == -1 && !cityDeque.empty() ) {
+	while ( !(cityList[retCityPos]).visited && !cityDeque.empty() ) {
 		string vertex = cityDeque.front();
 		cityDeque.pop_front();
-		cout << "parent: " << vertex << endl;
-		if ( cityLabels[city_pos(vertex)] > distance ) distance++;
-		for ( int i = 0; i < cityList[city_pos(vertex)].flightList.size() ) {
-
-
-
-
+		//cout << "parent: " << vertex << endl;
+		//if ( cityLabels[city_pos(vertex)] > distance ) distance++;
+		for ( int i = 0; i < cityList[city_pos(vertex)].flightList.size(); i++ ) {
+			cout << cityList[city_pos(vertex)].flightList[i].destination << endl;
 		}
 	} 
 }

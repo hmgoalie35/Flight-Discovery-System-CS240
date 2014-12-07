@@ -35,6 +35,7 @@ class Flight{
 		//check if flight was visited.
 		bool was_visited();
 
+
 	private:
 		//store the departure, destination city
 	    string destination, departure;
