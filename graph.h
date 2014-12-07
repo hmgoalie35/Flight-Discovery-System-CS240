@@ -28,8 +28,6 @@ class Graph {
 		void add_city (string cityName);
 		int city_pos (string cityName);
 
-		void depthFirstSearchAux(int, vector<bool>&);
-		void depthFirstSearch(int start);
 		
 		/*=checks if user input matches info in graph. returns true or false=*/
 		bool set_depart_city (string user_choice);

@@ -1,5 +1,8 @@
 #include "graph.h"
-
+#include "timeLength.h"
+#include <climits>
+#include <queue>
+#include <algorithm>
 //constructor
 Graph::Graph() { }
 
@@ -20,6 +23,7 @@ void Graph::add_flight (string cityInfo[], int size) {
 	add_city(destination_city);
 	Flight f = Flight(departure_city, destination_city, departure_time, arrival_time, cost);
 	cityList[city_pos(departure_city)].flightList.push_back(f);
+	//sort(cityList[city_pos(departure_city)].flightList.begin(), cityList[city_pos(departure_city)].flightList.end());
 }		
 
 //checks if city is in the list of cities
@@ -114,7 +118,7 @@ bool checkDate (string input) {
 	}
 	return true;
 }
-	
+
 //checks if city user wants to depart from exists and then sets variable
 bool Graph::set_depart_city (string user_choice) {
 	if (!(checkSyntax(user_choice))) return false;
@@ -195,29 +199,7 @@ void Graph::print_flight_sched () {
 			cout << *i << endl;
 		}
 	}
-	//depthFirstSearch(0);
 }
-
-
-// void Graph::depthFirstSearch(int start){
-//   vector<bool> unvisited(cityList.size(), true);
-//   depthFirstSearchAux(start, unvisited);
-// }
-
-// void Graph::depthFirstSearchAux(int start, vector<bool> & unvisited)
-// {
-//   // Add statements here to process myAdjacencyLists[start].data
-//   cout << cityList[start].name << endl;
-
-//   unvisited[start] = false;
-//   // Traverse its adjacency list, performing depth-first 
-//   // searches from each unvisited vertex in it.
-//   for (vector<Flight>::iterator it = cityList[start].flightList.begin(); it != cityList[start].flightList.end(); it++)
-//     // check if current vertex has been visited
-//     if (unvisited[*it])
-//       // start DFS from new node
-//       depthFirstSearchAux(*it, unvisited); 
-//   }
 
 void Graph::j_itin () {
 	cout << "J function call not yet implemented." << endl;
@@ -232,5 +214,54 @@ void Graph::c_itin () {
 } 					
 
 void Graph::s_itin () {
-	cout << "S function call not yet implemented." << endl;
-}						
+	bool done = false;
+	int source_index = city_pos(user_depart_city);
+	vector<TimeLength> d;
+	for(unsigned i = 0; i < cityList.size(); i++){
+		d.push_back(TimeLength(1000000,0));
+	}
+	d[source_index] = TimeLength(0, 0);
+	vector<Flight> shortest_path_list;
+	priority_queue<Flight, vector<Flight>, greater<Flight>> Q;
+	for(unsigned i = 0; i < cityList[source_index].flightList.size(); i++){
+		Q.push(cityList[source_index].flightList[i]);
+	}
+
+	while(!Q.empty() && !done){
+		Flight f = Q.top();
+		Q.pop();
+       // shortest_path_list.push_back(f);
+        //if the flight is a direct flight from departure -> destination and within time constraint.
+        //add in time constraint check.
+        int city_index = city_pos(f.get_destination_city());
+        d[city_index] = f.get_flight_duration();
+        if(f.get_destination_city() == user_destination_city && f.get_departure_city() == user_depart_city){
+        	shortest_path_list.push_back(f);
+        	done = true;
+            break;
+        }
+		shortest_path_list.push_back(f);
+		for(unsigned i = 0; i < cityList[city_index].flightList.size(); i++){
+			if(d[city_pos(cityList[city_index].flightList[i].get_destination_city())] > (d[city_pos(f.get_departure_city())]) + (cityList[city_index].flightList[i].get_flight_duration() + f.get_flight_duration())){
+				d[city_pos(cityList[city_index].flightList[i].get_destination_city())] = (d[city_pos(f.get_departure_city())]) + (cityList[city_index].flightList[i].get_flight_duration() + f.get_flight_duration());
+				if(cityList[city_index].flightList[i].get_destination_city() == user_destination_city){
+					shortest_path_list.push_back(cityList[city_index].flightList[i]);
+					done = true;
+					break;
+				}
+			}
+		}
+	}
+	if(d[city_pos(user_destination_city)] == TimeLength(1000000,0)){
+		cout << "There is no flight within the given constraints from " << user_depart_city << " to " << user_destination_city << endl;
+	}
+	cout << "\nThe shortest trip is via the following flights: \n\n";
+	for(unsigned i = 0; i < shortest_path_list.size() ; i++){
+		if(i != shortest_path_list.size()-1){
+			cout << shortest_path_list[i]  << "           |" << endl << "           |" << endl << "           v\n";
+		}else{
+			cout << shortest_path_list[i] << endl;
+		}
+	}
+	cout << "The total trip time is: " << d[city_pos(user_destination_city)] << endl;
+}
