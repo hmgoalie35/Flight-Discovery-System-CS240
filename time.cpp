@@ -126,5 +126,5 @@ ostream& operator<<(ostream &out, const Time &t){
 	} else {
 		out << "PM";
 	}
-	out << "      " << t.militaryHours;
+	return out;
 }
