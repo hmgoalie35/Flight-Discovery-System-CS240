@@ -83,37 +83,33 @@ int main (int argc, char* argv[]) {
       cout << "• S: Shortest Trip" << endl;
       cout << "• C: Cheapest" << endl;
       cout << "• P: Display daily flight schedule" << endl;
-
+      cout << "Enter 'Quit' to exit." << endl;
       cin >> choice;
 
-      if (choice != "J" && choice != "F" && choice != "S" && choice != "C" && choice != "P") {
+      if (choice != "J" && choice != "F" && choice != "S" && choice != "C" && choice != "P" && choice != "Quit") {
 			cout << "Incorrect Input. ";
 	   } else {
 			if (choice == "J") { 
             cout << "Just Get Me There Today itinerary selected" << endl;
             g.j_itin();
-            break;		
          }	
 			if (choice == "F") {
             cout << "Fewest Hops itinerary selected" << endl;
             g.f_itin();
-	         break;	
       	}	
 	  		if (choice == "S") {
             cout << "Shortest Trip itinerary selected" << endl;
             g.s_itin();
-            break;
 			}
 			if (choice == "C") { 
             cout << "Cheapest itinerary selected" << endl;
             g.c_itin();
-            break;
 			}
          if (choice == "P") { 
             cout << "Printing daily flight schedule..." << endl;
             g.print_flight_sched();
-            break;
          }
+         if (choice == "Quit") break;
 		}
    }
    return 1;
