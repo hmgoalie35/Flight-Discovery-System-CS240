@@ -219,18 +219,53 @@ void Graph::print_flight_sched () {
 //       depthFirstSearchAux(*it, unvisited); 
 //   }
 
+/*
+No matter the objective, you should print all the legs of the trip, in order, along with the total monetary cost, trip time
+(arrival time minus departure time), and number of hops for the best possible itinerary, according to the customer's
+specified Trip Constraints and Objectives. 
+
+The itinerary also includes return trip information---a list of flights starting at the destination city on the return date,
+ and arriving back at the original departure city.
+*/
 void Graph::j_itin () {
 	cout << "J function call not yet implemented." << endl;
 }			
 
+//get there in fewest hops w/ breadth first search
 void Graph::f_itin () {
-	cout << "F function call not yet implemented." << endl;
+	cout << "Fewest Hops Itinerary chosen." << endl;
+	breadthFirst(user_depart_city, user_destination_city, user_depart_time);
+	//breadthFirst(user_destination_city, user_depart_city, user_return_time);
+	//int i = 1;
+	//cout << user_depart_city << " to " << user_destination_city << endl;
+	// cout << "Hop " << i << ". Depart from " << totalLegs.at(0) " at " << flightTime << " on " << date << ". Arrive at " << totalLegs.at(1) << " at " << flightTime << " on " << data << endl;
+	//cout << "Return trip:" << endl;
+	// cout << number of days" << "total cost" << endl;
 }							
+
+void Graph::breadthFirst (const string &departCity, const string &retCity, const Time &departTime) {
+	int distance = 0;
+	int retCityPos = city_pos(retCity);									//get position of retCity in cityList
+	deque<string> cityDeque;											//create queue of cities to visit
+	cityDeque.push_back(departCity);									//put start city in queue
+	while ( cityLabels[retCityPos] == -1 && !cityDeque.empty() ) {
+		string vertex = cityDeque.front();
+		cityDeque.pop_front();
+		cout << "parent: " << vertex << endl;
+		if ( cityLabels[city_pos(vertex)] > distance ) distance++;
+		for ( int i = 0; i < cityList[city_pos(vertex)].flightList.size() ) {
+
+
+
+
+		}
+	} 
+}
 
 void Graph::c_itin () {
 	cout << "C function call not yet implemented." << endl;
 } 					
 
 void Graph::s_itin () {
-	cout << "S function call not yet implemented." << endl;
+	cout << "Shortets Trip itinerary chosen." << endl;
 }						

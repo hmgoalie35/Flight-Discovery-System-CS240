@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <deque>
 #include "time.h"
 #include "Flight.h"
 #include "Date.h"
@@ -29,7 +30,8 @@ class Graph {
 
 		void depthFirstSearchAux(int, vector<bool>&);
 		void depthFirstSearch(int start);
-		
+		void breadthFirst(const string &departCity, const string &retCity, const Time &departTime);
+
 		/*=checks if user input matches info in graph. returns true or false=*/
 		bool set_depart_city (string user_choice);
 		bool set_destination (string user_choice);
@@ -44,6 +46,7 @@ class Graph {
 		void f_itin ();									//Fewest Hops
 		void c_itin ();									//Cheapest
 		void s_itin ();									//Shortest Trip
+
 
 	private:
 
