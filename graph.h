@@ -11,28 +11,29 @@
 
 using namespace std;
 
-
-
-
 class Graph {
 	
 	struct City {
 		string name;
 		vector<Flight> flightList;
 		bool visited;
+		int distance; 											//used to tell distance from parent node in breadth first search 
 	};
 
 	public:
-		Graph ();										//constructor
-		~Graph ();										//destructor
-		void add_flight (string cityInfo[], int size);	//add flight info to graph. check if city already exists
+		Graph ();												//constructor
+		~Graph ();												//destructor
+		void add_flight (string cityInfo[], int size);			//add flight info to graph. check if city already exists
 		void add_city (string cityName);
 		int city_pos (string cityName);
 
 		void depthFirstSearchAux(int, vector<bool>&);
 		void depthFirstSearch(int start);
-		void breadthFirst(const string &departCity, const string &retCity, const Time &departTime);
+		vector<Flight> breadthFirst(const string &departCity, const string &retCity, Time &departTime);
 
+		void set_all_visited(string city);						//once a certain city name has been seen, all cities with that name are marked as visited. Used in breadth first search
+		void reset_all_visited();								//set all flights in a city to not visited
+	
 		/*=checks if user input matches info in graph. returns true or false=*/
 		bool set_depart_city (string user_choice);
 		bool set_destination (string user_choice);
@@ -42,13 +43,13 @@ class Graph {
 		bool set_return_time (string user_choice);
 		/*======================================*/
 
-		void print_flight_sched ();						//displays entire Daily Flight schedule
-		void j_itin ();									//Just Get Me There
-		void f_itin ();									//Fewest Hops
-		void c_itin ();									//Cheapest
-		void s_itin ();									//Shortest Trip
+		void print_flight_sched ();								//displays entire Daily Flight schedule
+		void j_itin ();											//Just Get Me There
+		void f_itin ();											//Fewest Hops
+		void c_itin ();											//Cheapest
+		void s_itin ();											//Shortest Trip
 
-
+		void reset_breadth_first();								//resets all City values
 	private:
 
 		/*====values from file=====*/		
@@ -72,5 +73,3 @@ class Graph {
 };
 
 #endif
-
-
