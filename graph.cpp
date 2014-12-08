@@ -251,7 +251,6 @@ void Graph::j_recursive(int start, int current, int destination, bool destinatio
 		for (int i = 0; i < cityList.size(); i++){
 			visited[i] = false;
 		}
-		visited[current] = true;
 	}
 	if (current == start && destinationReached){
 		cout << "reached full trip" << endl;
@@ -260,6 +259,7 @@ void Graph::j_recursive(int start, int current, int destination, bool destinatio
 		return;
 	}
 	for (int i = 0; i < cityList[current].flightList.size(); i++){
+		cout << cityList[current].name << endl;
 		bool isVisited = visited[city_pos(cityList[current].flightList[i].get_destination_city())];
 		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
 		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
