@@ -13,7 +13,6 @@ Flight::Flight(string the_departure, string the_destination, Time the_departure_
     departure_time = the_departure_time;
     arrival_time = the_arrival_time;
     flight_duration = arrival_time - departure_time;
-    distance = 0;
     visited = false;
 }
 //Prints out a Flight object. Formatted as Departure, Destination, Departure Time, Arrival Time, Cost, Flight Duration.
@@ -43,11 +42,6 @@ TimeLength Flight::get_flight_duration(){
     return flight_duration;
 }
 
-//return the flight departure time
-Time Flight::get_flight_departure() {
-    return departure_time;
-}
-
 //return the departure city.
 string Flight::get_departure_city(){
     return departure;
@@ -68,19 +62,13 @@ bool Flight::was_visited(){
     return visited;
 }
 
-void Flight::clear_distance() {
-    distance = 0;
+Time Flight::get_flight_departure_time(){
+    return departure_time;
+}
+Time Flight::get_flight_arrival_time(){
+    return arrival_time;
 }
 
-//change this flight's distance
-void Flight::set_distance(int new_value) {
-    distance = new_value;
-}
-
-//return this flight's distance
-int Flight::get_distance() {
-    return distance;
-}
 
 //destructor
 Flight::~Flight() {

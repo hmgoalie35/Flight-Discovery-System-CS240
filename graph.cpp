@@ -22,7 +22,7 @@ void Graph::add_flight (string cityInfo[], int size) {
 	cityList[city_pos(departure_city)].flightList.push_back(f);
 }		
 
-//checks if city is in the list of cities. if not, creates city
+//checks if city is in the list of cities
 void Graph::add_city(string cityName) {
 	bool in = false;
 	for (size_t i = 0; i < cityList.size(); i++) {
@@ -31,13 +31,11 @@ void Graph::add_city(string cityName) {
 	if(!in) {
 		City city = City();
 		city.name = cityName;
-		city.distance = 0;
-
 		cityList.push_back(city);
 	}
 }
 
-//finds position of city within cityList vector
+//finds position of city within citylist vector
 int Graph::city_pos(string cityName) {
 	size_t i;
 	for (i = 0; i < cityList.size(); i++) {
@@ -116,7 +114,7 @@ bool checkDate (string input) {
 	}
 	return true;
 }
-	
+
 //checks if city user wants to depart from exists and then sets variable
 bool Graph::set_depart_city (string user_choice) {
 	if (!(checkSyntax(user_choice))) return false;
@@ -130,7 +128,7 @@ bool Graph::set_depart_city (string user_choice) {
 	return false;
 }
 
-//checks if city user wants to travel to exists, and is not depart city. then sets variable
+//checks if city user wants to travel to exists, is not depart city,	 then sets variable
 bool Graph::set_destination (string user_choice) {
 	if (!(checkSyntax(user_choice))) return false;
 	for (size_t i = 0; i < cityList.size(); i++) {
@@ -221,111 +219,65 @@ void Graph::print_flight_sched () {
 //       depthFirstSearchAux(*it, unvisited); 
 //   }
 
-/*
-No matter the objective, you should print all the legs of the trip, in order, along with the total monetary cost, trip time
-(arrival time minus departure time), and number of hops for the best possible itinerary, according to the customer's
-specified Trip Constraints and Objectives. 
-
-The itinerary also includes return trip information---a list of flights starting at the destination city on the return date,
- and arriving back at the original departure city.
-*/
 void Graph::j_itin () {
-	cout << "J function call not yet implemented." << endl;
+	vector<Flight> path;
+	bool visited[cityList.size()];
+	Flight base;
+	for (int i = 0; i < cityList.size(); i++){
+		visited[i] = false;
+	}
+	j_recursive(city_pos(user_depart_city), city_pos(user_depart_city), city_pos(user_destination_city), false, user_depart_time, visited, path, base);
+	cout << "The possible flight paths available to travel to " << user_destination_city << " from " << user_depart_city << " and then back again between " << user_depart_time << " and " << user_return_time << " on " << user_depart_date << " are: " << endl;
+	 for (int i = 0; i < j_flightPaths.size(); i++){
+	 	cout << i + 1 << ": " << endl;
+	 	for (int j = 0; j < j_flightPaths[i].size(); j++){
+	 		cout << j_flightPaths[i][j] << endl;
+	 	}
+	 	cout << "\n";
+	 }
+	 if (j_flightPaths.size() < 1){
+	 	cout << "No possible paths." << endl;
+	 }
 }			
 
-//get there in fewest hops w/ breadth first search
-void Graph::f_itin () {
-	cout << "Fewest Hops Itinerary chosen." << endl;
-	vector<Flight> depart_journey(breadthFirst(user_depart_city, user_destination_city, user_depart_time));			//shortest hops to destination
-
-
-	reset_breadth_first();																							//reset city struct variables
-	reset_all_visited();																							//reset flight visited value		
-	//vector<Flight> return_journey(breadthFirst(user_destination_city, user_depart_city, user_return_time));		//shortest hops on return trip
-}							
-
-/*
-Since cityList is a struct comprised of a string city name and a vector of flight objects, linking flight destinations to 
-cities on the cityList was done through a deque of strings. The initial departure city is first added to the struct and its 
-corresponding city struct in CityList is marked as visited. Then it is taken off the deque and we iterate through its flight vector. Each flight
-destination name within this vector is added to the deque. All flight objects with this destination name are marked visited in their flight 
-object variables. The first element of the deque is then popped. It will be the name of a city that we have gotten from a flight object.
-Its corresponding element in cityList will be set to visited. This cityList element then has its flight vector iterated through. 
-This process is repeated for each successive name in the deqeue until the final destination is reached. 
-This algorithm ensures that the function does not quit prematurely, as it must print out multiple flight paths if they exist. As a result, the while loop
-cannot exit when the final destination is met. Rather, it must check that all the members in the deque that have the same distance from
-the parent node have had their flight objects iterated through.
-
-Function returns a vector of flights that can be taken to reach the destination city. It also includes the number of days that
-the trip will span, which will need to be added to the sum of the total flight time.
-*/
-vector<Flight> Graph::breadthFirst (const string &departCity, const string &retCity, Time &departTime) {
-	int distance = 0;
-	int retCityPos = city_pos(retCity);																		//get position of retCity in cityList
-	deque<string> cityDeque;																				//create queue of cities to visit
-	vector<Flight> legs;																					//create vector of possible flights to take
-	cityDeque.push_back(departCity);																		//put start city in queue
-	//Time nextDepart = departTime;																			//get departTime of each flight
-	while ( !cityDeque.empty() ) {																			//while deque is not empty
-		string vertex = cityDeque.front();																	//get first city name from queue
-		cityDeque.pop_front();																				//remove it from queue
-		cityList[city_pos(vertex)].visited = true;															//mark city in cityList visited
-		if ( cityList[city_pos(vertex)].distance > distance ) distance++;									//increment distance if necessary
-		if ((cityList[retCityPos]).visited && distance == cityList[retCityPos].distance) break;				//final city has been visited. Breaking here ensures city could be visited by multiple different flight paths in same number of hops
-		for (size_t i = 0; i < cityList[city_pos(vertex)].flightList.size(); i++ ) {						//iterate through all flights leaving from this city
-			Flight f(cityList[city_pos(vertex)].flightList[i]);												//create Flight object for each element
-			if ( !f.was_visited() ) {																		//for each distinct flight:
-				//if ( f.get_flight_departure() < nextDepart ) add day to flight time;						//if depart time for next flight is before current flight's depart time, the next flight must be taken the following day
-				if ( f.get_destination_city() != departCity) {												//this ensures flights with initial city's name (departCity) is not visited and departCity is not added to final vector.
-					cityDeque.push_back( f.get_destination_city() );										//push name of destination onto deque				
-					if (f.get_destination_city() != retCity) set_all_visited( f.get_destination_city() );	//mark all flights with the same destination as visited to avoid repeats. Ex: Boston has two flights to Philly - we only need to look at the first flight and ignore the second. Ignores return city because different flight paths can get to destination in same amount of hops, so it must be revisited
-					cityList[city_pos(f.get_destination_city())].distance = (distance + 1);					//increment the distance of the corresponding element within cityList
-					departTime = f.get_flight_departure();													//reset flight departure time
-					legs.push_back(f);																		//push flight onto itinerary vector
-				} else set_all_visited( f.get_destination_city() );
-			}
-		}	
+void Graph::j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, bool visited[], vector <Flight> path, Flight currentFlight){
+	visited[current] = true;
+	if (current != start){
+		path.push_back(currentFlight);
 	}
-	if (!(cityList[retCityPos]).visited && cityDeque.empty()) cout << "Shortest path could not be found." << endl;
-	return legs;
+	if (destination == current){
+		cout << "reached destination" << endl;
+		destinationReached = true;
+		for (int i = 0; i < cityList.size(); i++){
+			visited[i] = false;
+		}
+		visited[current] = true;
+	}
+	if (current == start && destinationReached){
+		cout << "reached full trip" << endl;
+		path.push_back(currentFlight);
+		j_flightPaths.push_back(path);
+		return;
+	}
+	for (int i = 0; i < cityList[current].flightList.size(); i++){
+		bool isVisited = visited[city_pos(cityList[current].flightList[i].get_destination_city())];
+		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
+		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
+		if (!isVisited && ((flightTime > currentTime) || flightTime == currentTime) && arrivalTime < user_return_time){
+			j_recursive(start, city_pos(cityList[current].flightList[i].get_destination_city()), destination, destinationReached, cityList[current].flightList[i].get_flight_arrival_time(), visited, path, cityList[current].flightList[i]);
+		}
+	}
+	return;
 }
+
+void Graph::f_itin () {
+	cout << "F function call not yet implemented." << endl;
+}							
 
 void Graph::c_itin () {
 	cout << "C function call not yet implemented." << endl;
 } 					
 
 void Graph::s_itin () {
-	cout << "Shortets Trip itinerary chosen." << endl;
-}
-
-/*
-Once a city name has appeared in the flightList within a certain city struct, all flights with this name are marked as visited.
-This is done for the shortest hop itinerary, since time and date are not relevant for the search, and we do not want to visit
-the same cities multiple times.
-*/
-void Graph::set_all_visited(string city) {
-	for (size_t j = 0; j < cityList.size(); j++) {
-		for (size_t i = 0; i < cityList[j].flightList.size(); i++) {
-			if (cityList[j].flightList[i].get_destination_city() == city) {
-				cityList[j].flightList[i].set_visited(true);
-			}
-		}
-	}
-}		
-
-void Graph::reset_all_visited() {
-	for (size_t j = 0; j < cityList.size(); j++) {
-		for (size_t i = 0; i < cityList[j].flightList.size(); i++) {
-			cityList[j].flightList[i].set_visited(false);
-			cityList[j].flightList[i].clear_distance();
-		}
-	}
-}	
-
-//resets all City values after breadth first search
-void Graph::reset_breadth_first() {								
-	for (size_t i = 0; i < cityList.size(); i++) {
-		cityList[i].distance= 0;
-		cityList[i].visited = false; 
-	}
-}				
+	cout << "S function call not yet implemented." << endl;
+}						

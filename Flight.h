@@ -28,23 +28,16 @@ class Flight{
 		bool operator==(const Flight&) const;
 		//get flight duration
 		TimeLength get_flight_duration();
-		//get flight departure time
-		Time get_flight_departure();
 		//get departure city
 		string get_departure_city();
 		//get destination city
 		string get_destination_city();
-		//get distance
-		int get_distance();
-		//check if flight was visited. 
-		bool was_visited();
-		//reset distance values
-		void clear_distance();
-		//set distance to new value
-		void set_distance(int value);
 		//set visited to new value
 		void set_visited(bool);
-		
+		//check if flight was visited.
+		bool was_visited();
+		Time get_flight_departure_time();
+		Time get_flight_arrival_time();
 	private:
 		//store the departure, destination city
 	    string destination, departure;
@@ -56,8 +49,6 @@ class Flight{
 	    TimeLength flight_duration;
 	    //if we have already checked this flight for shortest path, etc.
 	    bool visited;
-	    //distance from parent, used in breadth first search
-	    int distance;
 
 };
 

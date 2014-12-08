@@ -30,7 +30,7 @@ class Graph {
 		void depthFirstSearchAux(int, vector<bool>&);
 		void depthFirstSearch(int start);
 		vector<Flight> breadthFirst(const string &departCity, const string &retCity, Time &departTime);
-
+		vector< vector<Flight> > j_flightPaths;
 		void set_all_visited(string city);						//once a certain city name has been seen, all cities with that name are marked as visited. Used in breadth first search
 		void reset_all_visited();								//set all flights in a city to not visited
 	
@@ -44,7 +44,9 @@ class Graph {
 		/*======================================*/
 
 		void print_flight_sched ();								//displays entire Daily Flight schedule
-		void j_itin ();											//Just Get Me There
+		void j_itin ();		
+		void j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, bool visited[], vector <Flight> path, Flight currentFlight);
+									//Just Get Me There
 		void f_itin ();											//Fewest Hops
 		void c_itin ();											//Cheapest
 		void s_itin ();											//Shortest Trip
