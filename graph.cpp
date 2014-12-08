@@ -212,13 +212,13 @@ specified Trip Constraints and Objectives.
 The itinerary also includes return trip information---a list of flights starting at the destination city on the return date,
  and arriving back at the original departure city.
 */
-void Graph::j_itin () {
-	cout << "J function call not yet implemented." << endl;
-}			
+ void Graph::j_itin () {
+ 	cout << "J function call not yet implemented." << endl;
+ }			
 
 //get there in fewest hops w/ breadth first search
-void Graph::f_itin () {
-	cout << "Fewest Hops Itinerary chosen." << endl;
+ void Graph::f_itin () {
+ 	cout << "Fewest Hops Itinerary chosen." << endl;
 	vector<Flight> depart_journey(breadthFirst(user_depart_city, user_destination_city, user_depart_time));			//shortest hops to destination
 
 
@@ -278,58 +278,60 @@ void Graph::c_itin () {
 } 					
 
 void Graph::s_itin () {
-	bool done = false;
-	int source_index = city_pos(user_depart_city);
+	cout << "The shortest departing trip is via the following flights: \n\n";
+	shortest_travel_time(user_depart_city, user_destination_city);
+	cout << "The shortest return trip is via the following flights: \n\n";
+	shortest_travel_time(user_destination_city, user_depart_city);
+}
+
+void Graph::shortest_travel_time(string departure, string arrival){
+	int source_index = city_pos(departure);
 	vector<TimeLength> d;
 	for(unsigned i = 0; i < cityList.size(); i++){
 		d.push_back(TimeLength(1000000,0));
 	}
 	d[source_index] = TimeLength(0, 0);
-	vector<Flight> shortest_path_list;
-	priority_queue<Flight, vector<Flight>, greater<Flight>> Q;
-	for(unsigned i = 0; i < cityList[source_index].flightList.size(); i++){
-		Q.push(cityList[source_index].flightList[i]);
+	vector<Flight> shortest_path_list(cityList.size()), Q;
+	for(unsigned i = 0; i < cityList.size(); i++){
+		for(unsigned j = 0; j < cityList[i].flightList.size(); j++){
+			Q.push_back(cityList[i].flightList[j]);
+		}
 	}
-
-	while(!Q.empty() && !done){
-		Flight f = Q.top();
-		Q.pop();
-       // shortest_path_list.push_back(f);
-        //if the flight is a direct flight from departure -> destination and within time constraint.
+	while(!Q.empty()){
+		Flight f = Q.front();
+		Q.erase(Q.begin());
         //add in time constraint check.
-        int city_index = city_pos(f.get_destination_city());
-        d[city_index] = f.get_flight_duration();
-        if(f.get_destination_city() == user_destination_city && f.get_departure_city() == user_depart_city){
-        	shortest_path_list.push_back(f);
-        	done = true;
-            break;
-        }
-		shortest_path_list.push_back(f);
+		int city_index = city_pos(f.get_destination_city());
 		for(unsigned i = 0; i < cityList[city_index].flightList.size(); i++){
-			if(d[city_pos(cityList[city_index].flightList[i].get_destination_city())] > (d[city_pos(f.get_departure_city())]) + (cityList[city_index].flightList[i].get_flight_duration() + f.get_flight_duration())){
-				d[city_pos(cityList[city_index].flightList[i].get_destination_city())] = (d[city_pos(f.get_departure_city())]) + (cityList[city_index].flightList[i].get_flight_duration() + f.get_flight_duration());
-				if(cityList[city_index].flightList[i].get_destination_city() == user_destination_city){
-					shortest_path_list.push_back(cityList[city_index].flightList[i]);
-					done = true;
-					break;
-				}
+			if(d[city_pos(cityList[city_index].flightList[i].get_departure_city())] > (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration())){
+				d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
+				shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
 			}
 		}
 	}
-	if(d[city_pos(user_destination_city)] == TimeLength(1000000,0)){
-		cout << "There is no flight within the given constraints from " << user_depart_city << " to " << user_destination_city << endl;
-	}
-	cout << "\nThe shortest trip is via the following flights: \n\n";
-	for(unsigned i = 0; i < shortest_path_list.size() ; i++){
-		if(i != shortest_path_list.size()-1){
-			cout << shortest_path_list[i]  << "           |" << endl << "           |" << endl << "           v\n";
+	vector<Flight> final_list;
+	string current_city = arrival;
+	while(current_city != departure){
+		if(shortest_path_list[city_pos(current_city)].get_departure_city() != ""){
+			final_list.push_back(shortest_path_list[city_pos(current_city)]);
+			current_city = shortest_path_list[city_pos(current_city)].get_departure_city();
 		}else{
-			cout << shortest_path_list[i] << endl;
+			break;
 		}
 	}
-	cout << "The total trip time is: " << d[city_pos(user_destination_city)] << endl;
+	if(d[city_pos(arrival)] == TimeLength(1000000,0)){
+		cout << "There is no flight within the given constraints from " << departure << " to " << arrival << endl;
+	}else{
+		for(int i = final_list.size() - 1; i >= 0; i--){
+			if(i == 0){
+				cout << final_list[i] << endl;
+			}else{
+				cout << final_list[i]  << "           |" << endl << "           |" << endl << "           v\n";
+			}
+		}
+		cout << "The total trip time is: " << d[city_pos(arrival)] << endl << endl;
+	}	
 }
-
 
 /*
 Once a city name has appeared in the flightList within a certain city struct, all flights with this name are marked as visited.

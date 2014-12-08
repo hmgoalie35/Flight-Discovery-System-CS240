@@ -28,6 +28,7 @@ class Graph {
 		int city_pos (string cityName);
 
 		vector<Flight> breadthFirst(const string &departCity, const string &retCity, Time &departTime);
+		void shortest_travel_time(string, string);
 
 		void set_all_visited(string city);						//once a certain city name has been seen, all cities with that name are marked as visited. Used in breadth first search
 		void reset_all_visited();								//set all flights in a city to not visited
