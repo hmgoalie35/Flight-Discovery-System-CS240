@@ -55,6 +55,11 @@ Time Flight::get_flight_departure() {
     return departure_time;
 }
 
+//return the flight arrival time
+Time Flight::get_flight_arrival() {
+    return arrival_time;
+}
+
 //return the departure city.
 string Flight::get_departure_city(){
     return departure;
@@ -79,6 +84,11 @@ void Flight::clear_distance() {
     distance = 0;
 }
 
+//return flight cost
+float Flight::get_cost(){
+    return cost;
+}
+
 //change this flight's distance
 void Flight::set_distance(int new_value) {
     distance = new_value;
@@ -87,6 +97,11 @@ void Flight::set_distance(int new_value) {
 //return this flight's distance
 int Flight::get_distance() {
     return distance;
+}
+
+//add time to flight duration
+void Flight::add_time_duration(TimeLength newTime) {
+    flight_duration = newTime;
 }
 
 //destructor

@@ -30,12 +30,16 @@ class Flight{
 		TimeLength get_flight_duration();
 		//get flight departure time
 		Time get_flight_departure();
+		//get flight arrival time
+		Time get_flight_arrival();
 		//get departure city
 		string get_departure_city();
 		//get destination city
 		string get_destination_city();
 		//get distance
 		int get_distance();
+		//get cost of flight
+		float get_cost();
 		//check if flight was visited. 
 		bool was_visited();
 		//reset distance values
@@ -44,7 +48,9 @@ class Flight{
 		void set_distance(int value);
 		//set visited to new value
 		void set_visited(bool);
-		
+		//add time to flight duration
+		void add_time_duration(TimeLength delay);
+
 	private:
 		//store the departure, destination city
 	    string destination, departure;
