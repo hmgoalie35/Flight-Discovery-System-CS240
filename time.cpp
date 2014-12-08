@@ -14,7 +14,12 @@ Time::Time(string t) : daysPast(0){
 	AM = (testAM == "am") ? true : false;
 	hours = atoi(h.c_str());
 	mins = atoi(m.c_str());
-	militaryHours = (AM) ? hours : hours + 12;
+	if (!AM && hours != 12){
+		militaryHours = hours + 12;
+	} else {
+		militaryHours = hours;
+	}
+	
 }
 Time::Time(int newHours,int newMins,bool newAM) : militaryHours(newHours), mins(newMins), AM(newAM) {
 	hours = militaryHours;
@@ -121,6 +126,5 @@ ostream& operator<<(ostream &out, const Time &t){
 	} else {
 		out << "PM";
 	}
-	
 	return out;
 }
