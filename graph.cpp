@@ -208,34 +208,37 @@ void Graph::j_itin () {
 	int size = 10000;
 	int shortest;
 	int i;
-	for (i = 0; i < j_flightPaths.size(); i++){
-		if (j_flightPaths[i].size() < size){
-			size = j_flightPaths[i].size();
-			shortest = i;
-		}	 	
-		
-	}
-	float totalCost = 0;
-	TimeLength totalDuration = j_flightPaths[shortest][j_flightPaths[shortest].size() - 1].get_flight_arrival_time() - j_flightPaths[shortest][0].get_flight_departure_time();
-	cout << "\nTrip Itinerary: \n";
-	for (int j = 0; j < j_flightPaths[shortest].size(); j++){
-		totalCost += j_flightPaths[shortest][j].get_cost();
-		cout << j_flightPaths[shortest][j];
-		if (j != j_flightPaths[shortest].size() - 1){
-			cout  << "           |" << endl << "           |" << endl << "           v";
-		}
-		cout << "\n";
-	}
 	if (j_flightPaths.size() > 0){
-		cout << "Total trip cost: $" << totalCost << endl;
-		cout << "Total trip duration: " << totalDuration << "\n\n";
+		for (i = 0; i < j_flightPaths.size(); i++){
+			if (j_flightPaths[i].size() < size){
+				size = j_flightPaths[i].size();
+				shortest = i;
+			}	 	
+
+		}
+		float totalCost = 0;
+		TimeLength totalDuration = j_flightPaths[shortest][j_flightPaths[shortest].size() - 1].get_flight_arrival_time() - j_flightPaths[shortest][0].get_flight_departure_time();
+		cout << "\nTrip Itinerary: \n";
+		for (int j = 0; j < j_flightPaths[shortest].size(); j++){
+			totalCost += j_flightPaths[shortest][j].get_cost();
+			cout << j_flightPaths[shortest][j];
+			if (j != j_flightPaths[shortest].size() - 1){
+				cout  << "           |" << endl << "           |" << endl << "           v";
+			}
+			cout << "\n";
+		}
+		cout << "=================================\n";
+		cout << "Total Round-Trip Cost: $" << totalCost << endl;
+		cout << "Total Round-Trip Hops: " << size + 1 << endl;
+		cout << "Total Round-Trip Time: " << totalDuration << endl;
+		cout << "=================================\n\n";
 	}
 	if (j_flightPaths.size() < 1){
-		cout << "No possible paths." << endl;
+		cout << "\nNo possible paths.\n\n";
 	}
 }			
 
- 
+
 void Graph::j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight){
 	if (current != start){
 		path.push_back(currentFlight);
@@ -246,6 +249,7 @@ void Graph::j_recursive(int start, int current, int destination, bool destinatio
 		j_flightPaths.push_back(path);
 		return;
 	}
+	cout << cityList[current].name << endl;
 	for (int i = 0; i < cityList[current].flightList.size(); i++){
 		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
 		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
@@ -371,9 +375,9 @@ void Graph::print_results(vector<Flight> &breadth_results) {
 		if (breadth_results[j].get_destination_city() == prev) {
 			if ( breadth_results[j].get_flight_arrival() > compareFlightTime) {						//if depart time for next flight is before current flight's depart time, the next flight must be taken the following day
 				delay = (compareFlightTime + breadth_results[j].get_flight_departure());			//^^ if the arrival time of one flight precedes the departure time of another flight (from the same city), then the traveler can "make" that flight. 
-				totalTripTime = totalTripTime - path[0].get_flight_duration();
-				path[0].add_time_duration(delay);		
-				totalTripTime = totalTripTime + path[0].get_flight_duration();				
+			totalTripTime = totalTripTime - path[0].get_flight_duration();
+			path[0].add_time_duration(delay);		
+			totalTripTime = totalTripTime + path[0].get_flight_duration();				
 				compareFlightTime = breadth_results[j].get_flight_departure();							//reset flight departure time
 			}		
 			totalTripTime = totalTripTime + breadth_results[j].get_flight_duration();
@@ -429,7 +433,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 			Flight f(cityList[city_pos(vertex)].flightList[i]);															//create Flight object for each element
 			if ( !f.was_visited() ) {																					//if flight is distinct:
 				if (f.get_departure_city() == departCity && f.get_flight_departure() < departTime ){}					//if first flight leaves before the user wants to start trip (departure and return), skip this flight
-				else {
+					else {
 					if ( f.get_destination_city() == departCity) set_all_visited( f.get_destination_city() );			//this ensures flights with initial city's name (departCity) is not visited and departCity is not added to final vector.			
 					else {
 						if ( !(destination_reached) ) {
@@ -439,32 +443,30 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 						}
 					}
 		 			if ( f.get_destination_city() == retCity) destination_reached = true;								//final city has been visited once.
-				}
-			}
-		}	
+		 		}
+		 	}
+		 }	
+		}
+		if (!(cityList[retCityPos]).visited && cityDeque.empty()) {
+			cout << "Shortest path could not be found. Check flight listings and flight times." << endl << endl;
+			vector<Flight> fail(0);
+			return fail;
+		} 
+		return legs;
+
+
+
 	}
-	if (!(cityList[retCityPos]).visited && cityDeque.empty()) {
-		cout << "Shortest path could not be found. Check flight listings and flight times." << endl << endl;
-		vector<Flight> fail(0);
-		return fail;
-	} 
-	return legs;
 
 
-	
-}
 
-void Graph::f_itin () {
-	cout << "F function call not yet implemented." << endl;
-}							
+	void Graph::c_itin () {
+		cout << "C function call not yet implemented." << endl;
+	} 					
 
-void Graph::c_itin () {
-	cout << "C function call not yet implemented." << endl;
-} 					
-
-void Graph::s_itin () {
-	cout << "Shortets Trip itinerary chosen." << endl;
-}
+	void Graph::s_itin () {
+		cout << "Shortets Trip itinerary chosen." << endl;
+	}
 
 /*
 Once a city name has appeared in the flightList within a certain city struct, all flights with this name are marked as visited.
@@ -497,4 +499,3 @@ void Graph::reset_breadth_first() {
 		cityList[i].visited = false; 
 	}
 }				
->>>>>>> dev

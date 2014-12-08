@@ -66,6 +66,7 @@ class Flight{
 	    TimeLength flight_duration;
 	    //if we have already checked this flight for shortest path, etc.
 	    bool visited;
+	    int distance;
 
 };
 

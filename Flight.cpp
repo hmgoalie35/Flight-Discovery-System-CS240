@@ -14,6 +14,7 @@ Flight::Flight(string the_departure, string the_destination, Time the_departure_
     arrival_time = the_arrival_time;
     flight_duration = arrival_time - departure_time;
     visited = false;
+    distance = 0;
 }
 //Prints out a Flight object. Formatted as Departure, Destination, Departure Time, Arrival Time, Cost, Flight Duration.
 ostream& operator<< (ostream& out, const Flight& flight) {
@@ -24,6 +25,10 @@ ostream& operator<< (ostream& out, const Flight& flight) {
 //checks to see if one flight has a shorter duration than the other
 bool Flight::operator<(const Flight& flight) const{
     return (this->flight_duration < flight.flight_duration);
+}
+
+void Flight::clear_distance(){
+    distance = 0;
 }
 
 //checks to see if one flight has a longer duration than the other
