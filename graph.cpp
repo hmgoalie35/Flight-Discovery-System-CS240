@@ -87,7 +87,7 @@ bool checkTime (string input) {
 		}
 	}
 	if (!(hour >= 1 && hour <= 12) || !(minute >= 0 && minute <= 60)) {
-		cout << "Enter acceptalble time. ";
+		cout << "Enter acceptable time. ";
 		return false;
 	}
 	return true;
@@ -142,6 +142,7 @@ bool Graph::set_destination (string user_choice) {
 }
 
 //checks if departure date is possible, checks syntax, then sets variable
+//The departure date must be different from (and before) the return date.
 bool Graph::set_depart_date (string user_choice) {
 	if (!(checkDate(user_choice))) return false;
 	int day = stoi(user_choice.substr(0,2)); 
@@ -167,8 +168,8 @@ bool Graph::set_return_date (string user_choice) {
 	int month = stoi(user_choice.substr(3,2)); 
 	int year = stoi(user_choice.substr(6,user_choice.size()));
 	Date d(day, month, year);
-	if (d < user_depart_date) {
-		cout << "Return date is before depart date. ";
+	if ( !(d > user_depart_date) ) {
+		cout << "Return date is before or on depart date. ";
 		return false;
 	}
 	user_return_date = d;
@@ -195,29 +196,8 @@ void Graph::print_flight_sched () {
 			cout << *i << endl;
 		}
 	}
-	//depthFirstSearch(0);
 }
 
-
-// void Graph::depthFirstSearch(int start){
-//   vector<bool> unvisited(cityList.size(), true);
-//   depthFirstSearchAux(start, unvisited);
-// }
-
-// void Graph::depthFirstSearchAux(int start, vector<bool> & unvisited)
-// {
-//   // Add statements here to process myAdjacencyLists[start].data
-//   cout << cityList[start].name << endl;
-
-//   unvisited[start] = false;
-//   // Traverse its adjacency list, performing depth-first 
-//   // searches from each unvisited vertex in it.
-//   for (vector<Flight>::iterator it = cityList[start].flightList.begin(); it != cityList[start].flightList.end(); it++)
-//     // check if current vertex has been visited
-//     if (unvisited[*it])
-//       // start DFS from new node
-//       depthFirstSearchAux(*it, unvisited); 
-//   }
 
 void Graph::j_itin () {
 	vector<Flight> path;
@@ -255,6 +235,7 @@ void Graph::j_itin () {
 	}
 }			
 
+ 
 void Graph::j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight){
 	if (current != start){
 		path.push_back(currentFlight);
@@ -275,6 +256,204 @@ void Graph::j_recursive(int start, int current, int destination, bool destinatio
 	return;
 }
 
+//get there in fewest hops w/ breadth first search
+void Graph::f_itin () {
+	TimeLength set_zero(0,0);
+	roundTripTime = set_zero;
+	roundTripCost = 0;
+	roundTripHops = 0;	
+	vector<Flight> depart_journey(breadthFirst(user_depart_city, user_destination_city, user_depart_time));		//shortest hops to destination
+	if (depart_journey.size() != 0) {
+		cout << endl << "DEPARTURE TRIP ON " << user_depart_date << ":" << endl;		
+		print_results(depart_journey);
+		cout << endl << "RETURN TRIP ON " << user_return_date << ":" << endl;
+		vector<Flight> return_journey(breadthFirst(user_destination_city, user_depart_city, user_return_time));	//shortest hops on return trip
+		if (return_journey.size() != 0) print_results(return_journey);
+		cout << "=================================" << endl;
+		cout << "Total Round-Trip Cost: $" << roundTripCost << endl;
+		cout << "Total Round-Trip Hops: " << roundTripHops << endl;
+		cout << "Total Round-Trip Time: " << roundTripTime << endl;	
+		cout << "=================================" << endl << endl;
+	}
+
+
+	// TWO HOPS
+	// int totalHops = 0;
+	// float totalCost = 0.0;
+	// TimeLength totalTripTime(0,0);
+	// int pathChoice = 0;
+	// cout << "Fewest Hops Itinerary chosen." << endl;
+	// vector<Flight> depart_journey(breadthFirst(user_depart_city, user_destination_city, user_depart_time));			//shortest hops to destination
+	// if (depart_journey.size() != 0) {
+	// 	for ( size_t i = (depart_journey.size()); i > 0; i-- ) {
+	// 		if (depart_journey[i-1].get_destination_city() ==  user_destination_city) {
+	// 			deque<Flight> path;
+	// 			pathChoice++;
+	// 			path.push_front(depart_journey[i-1]);
+	// 			totalTripTime = totalTripTime + depart_journey[i-1].get_flight_duration();
+	// 			totalCost += depart_journey[i-1].get_cost();
+	// 			for (int j = i-1; j >= 0; j--) {
+	// 				string prev = path[0].get_departure_city();
+	// 				if (depart_journey[j].get_destination_city() == prev){
+	// 					totalTripTime = totalTripTime + depart_journey[j].get_flight_duration();
+	// 					path.push_front(depart_journey[j]);
+	// 					totalHops++;
+	// 					totalCost += depart_journey[j].get_cost();
+	// 				}
+	// 			}
+	// 			cout << "Path " << pathChoice << endl;
+	// 			for (size_t i = 0; i < path.size(); i++) {
+	// 				cout << path[i] << endl;
+	// 			}
+	// 			cout << "Total Cost: $" << totalCost << endl;
+	// 			cout << "Total Hops: " << totalHops << endl;
+	// 			cout << "Total Time: " << totalTripTime << endl << endl;
+	// 			totalHops = 0;
+	// 			totalCost = 0;
+	// 			TimeLength reset(0,0);
+	// 			totalTripTime = reset;
+	// 			pathChoice = 0;
+	// 		}
+	// 	}
+	// 	cout << "==========RETURN TRIP=============" << endl;
+	// 	reset_breadth_first();																							//reset city struct variables
+	// 	reset_all_visited();																							//reset flight visited value		
+	// 	vector<Flight> return_journey(breadthFirst(user_destination_city, user_depart_city, user_return_time));			//shortest hops on return trip
+	// 	if (return_journey.size() != 0) {
+	// 		for ( size_t i = (return_journey.size()); i > 0; i-- ) {
+	// 			if (return_journey[i-1].get_destination_city() ==  user_depart_city) {
+	// 				deque<Flight> path;
+	// 				pathChoice++;
+	// 				path.push_front(return_journey[i-1]);
+	// 				totalTripTime = totalTripTime + return_journey[i-1].get_flight_duration();
+	// 				totalCost += return_journey[i-1].get_cost();
+	// 				for (int j = i-1; j >= 0; j--) {
+	// 					string prev = path[0].get_departure_city();
+	// 					if (return_journey[j].get_destination_city() == prev){
+	// 						totalTripTime = totalTripTime + return_journey[j].get_flight_duration();
+	// 						path.push_front(return_journey[j]);
+	// 						totalHops++;
+	// 						totalCost += return_journey[j].get_cost();
+	// 					}
+	// 				}
+	// 				cout << "Return Trip for Path " << pathChoice << endl;
+	// 				for (size_t i = 0; i < path.size(); i++) {
+	// 					cout << path[i] << endl;
+	// 				}
+	// 				cout << "Total Cost: $" << totalCost << endl;
+	// 				cout << "Total Hops: " << totalHops << endl;
+	// 				cout << "Total Time: " << totalTripTime << endl << endl;
+	// 				totalHops = 0;
+	// 				totalCost = 0;
+	// 				TimeLength reset(0,0);
+	// 				totalTripTime = reset;
+	// 			}
+	// 		}
+	// 	}
+	// }
+}							
+
+//print results from breadth first search
+void Graph::print_results(vector<Flight> &breadth_results) {
+	Time compareFlightTime;
+	int totalHops = 0;
+	float totalCost = 0.0;
+	TimeLength totalTripTime(0,0);
+	TimeLength delay(0,0);
+	deque<Flight> path;
+	size_t end_index = breadth_results.size() - 1;
+	path.push_front( breadth_results[end_index] );
+	totalTripTime = totalTripTime + breadth_results[end_index].get_flight_duration();
+	totalCost += breadth_results[end_index].get_cost();
+	for (int j = end_index - 1; j >= 0; j--) {
+		string prev = path[0].get_departure_city();
+		compareFlightTime = path[0].get_flight_departure();
+		if (breadth_results[j].get_destination_city() == prev) {
+			if ( breadth_results[j].get_flight_arrival() > compareFlightTime) {						//if depart time for next flight is before current flight's depart time, the next flight must be taken the following day
+				delay = (compareFlightTime + breadth_results[j].get_flight_departure());			//^^ if the arrival time of one flight precedes the departure time of another flight (from the same city), then the traveler can "make" that flight. 
+				totalTripTime = totalTripTime - path[0].get_flight_duration();
+				path[0].add_time_duration(delay);		
+				totalTripTime = totalTripTime + path[0].get_flight_duration();				
+				compareFlightTime = breadth_results[j].get_flight_departure();							//reset flight departure time
+			}		
+			totalTripTime = totalTripTime + breadth_results[j].get_flight_duration();
+			path.push_front(breadth_results[j]);
+			totalHops++;
+			totalCost += breadth_results[j].get_cost();
+		}
+	}
+	for (size_t i = 0; i < path.size(); i++) {
+		cout << path[i];
+		if ( i < (path.size() - 1) ) {
+			cout << "		|" << endl;
+			cout << "		|" << endl;
+			cout << "		V" << endl;
+		} else cout << endl;
+	}
+	cout << "Total One-Way Cost: $" << totalCost << endl;
+	cout << "Total One-Way Hops: " << totalHops << endl;
+	cout << "Total One-Way Time: " << totalTripTime << endl << endl;
+	roundTripTime = roundTripTime + totalTripTime;
+	roundTripCost += totalCost;
+	roundTripHops += totalHops;
+	//=====RESET FIELDS=====//
+	reset_breadth_first();																							//reset city struct variables
+	reset_all_visited();																							//reset flight visited value		
+	//======================//
+}
+
+/*
+Since cityList is a struct comprised of a string city name and a vector of flight objects, linking flight destinations to 
+cities on the cityList was done through a deque of strings. The initial departure city is first added to the struct and its 
+corresponding city struct in CityList is marked as visited. Then it is taken off the deque and we iterate through its flight vector. Each flight
+destination name within this vector is added to the deque. All flight objects with this destination name are marked visited in their flight 
+object variables. The first element of the deque is then popped. It will be the name of a city that we have gotten from a flight object.
+Its corresponding element in cityList will be set to visited. This cityList element then has its flight vector iterated through. 
+This process is repeated for each successive name in the deqeue until the queue is empty. 
+This algorithm ensures that the function does not quit prematurely, as it must print out multiple flight paths if they exist. As a result, the while loop
+cannot exit until deque is empty. Once the destination city is reached much, bool onePath = true. Now, only
+flights that arrive in the correct destination city are added to the vector. This saves space and results in the deqeue not adding unnecessary new elements.
+Function returns a vector of flights that can be taken to reach the destination city.
+*/
+vector<Flight> Graph::breadthFirst (const string &departCity, const string &retCity, Time &departTime) {
+	bool destination_reached = false;
+	int retCityPos = city_pos(retCity);																					//get position of retCity in cityList
+	deque<string> cityDeque;																							//create queue of cities to visit
+	vector<Flight> legs;																								//create vector of possible flights to take
+	cityDeque.push_back(departCity);																					//put start city in queue
+	while ( !cityDeque.empty() && !destination_reached) {																//while deque is not empty and destination has not been reached
+		string vertex = cityDeque.front();																				//get first city name from queue
+		cityDeque.pop_front();																							//remove it from queue
+		cityList[city_pos(vertex)].visited = true;																		//mark city in cityList visited
+		for (size_t i = 0; i < cityList[city_pos(vertex)].flightList.size(); i++ ) {									//iterate through all flights leaving from this city
+			Flight f(cityList[city_pos(vertex)].flightList[i]);															//create Flight object for each element
+			if ( !f.was_visited() ) {																					//if flight is distinct:
+				if (f.get_departure_city() == departCity && f.get_flight_departure() < departTime ){}					//if first flight leaves before the user wants to start trip (departure and return), skip this flight
+				else {
+					if ( f.get_destination_city() == departCity) set_all_visited( f.get_destination_city() );			//this ensures flights with initial city's name (departCity) is not visited and departCity is not added to final vector.			
+					else {
+						if ( !(destination_reached) ) {
+							cityDeque.push_back( f.get_destination_city() );											//push name of destination onto deque				
+							set_all_visited( f.get_destination_city() );												//mark all flights with the same destination as visited to avoid repeats. Ex: Boston has two flights to Philly - we only need to look at the first flight and ignore the second. Ignores return city because different flight paths can get to destination in same amount of hops, so it must be revisited
+							legs.push_back(f);																			//push flight onto itinerary vector
+						}
+					}
+		 			if ( f.get_destination_city() == retCity) destination_reached = true;								//final city has been visited once.
+				}
+			}
+		}	
+	}
+	if (!(cityList[retCityPos]).visited && cityDeque.empty()) {
+		cout << "Shortest path could not be found. Check flight listings and flight times." << endl << endl;
+		vector<Flight> fail(0);
+		return fail;
+	} 
+	return legs;
+
+
+	
+}
+
 void Graph::f_itin () {
 	cout << "F function call not yet implemented." << endl;
 }							
@@ -284,5 +463,38 @@ void Graph::c_itin () {
 } 					
 
 void Graph::s_itin () {
-	cout << "S function call not yet implemented." << endl;
-}						
+	cout << "Shortets Trip itinerary chosen." << endl;
+}
+
+/*
+Once a city name has appeared in the flightList within a certain city struct, all flights with this name are marked as visited.
+This is done for the fewest hop itinerary, since time and date are not relevant for the search, and we do not want to visit
+the same cities multiple times.
+*/
+void Graph::set_all_visited(string city) {
+	for (size_t j = 0; j < cityList.size(); j++) {
+		for (size_t i = 0; i < cityList[j].flightList.size(); i++) {
+			if (cityList[j].flightList[i].get_destination_city() == city) {
+				cityList[j].flightList[i].set_visited(true);
+			}
+		}
+	}
+}		
+
+void Graph::reset_all_visited() {
+	for (size_t j = 0; j < cityList.size(); j++) {
+		for (size_t i = 0; i < cityList[j].flightList.size(); i++) {
+			cityList[j].flightList[i].set_visited(false);
+			cityList[j].flightList[i].clear_distance();
+		}
+	}
+}	
+
+//resets all City values after breadth first search
+void Graph::reset_breadth_first() {								
+	for (size_t i = 0; i < cityList.size(); i++) {
+		cityList[i].distance= 0;
+		cityList[i].visited = false; 
+	}
+}				
+>>>>>>> dev
