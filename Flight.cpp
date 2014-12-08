@@ -2,7 +2,14 @@
 
 //default constructor
 Flight::Flight(){
-
+    destination = "";
+    departure = "";
+    cost = 0;
+    departure_time = Time("00:00pm");
+    arrival_time = Time("00:00pm");
+    flight_duration = arrival_time - departure_time;
+    distance = 0;
+    visited = false;
 }
 
 //value constructor, takes in the departure city, destination city, departure time, arrival time, cost and sets the members accordingly.
