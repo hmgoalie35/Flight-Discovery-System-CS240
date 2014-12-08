@@ -219,7 +219,6 @@ The itinerary also includes return trip information---a list of flights starting
 //get there in fewest hops w/ breadth first search
  void Graph::f_itin () {
  	cout << "Fewest Hops Itinerary chosen." << endl;
-	vector<Flight> depart_journey(breadthFirst(user_depart_city, user_destination_city, user_depart_time));			//shortest hops to destination
 	TimeLength set_zero(0,0);
 	roundTripTime = set_zero;
 	roundTripCost = 0;
