@@ -249,7 +249,6 @@ void Graph::j_recursive(int start, int current, int destination, bool destinatio
 		j_flightPaths.push_back(path);
 		return;
 	}
-	cout << cityList[current].name << endl;
 	for (int i = 0; i < cityList[current].flightList.size(); i++){
 		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
 		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
