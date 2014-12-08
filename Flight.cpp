@@ -68,7 +68,9 @@ Time Flight::get_flight_departure_time(){
 Time Flight::get_flight_arrival_time(){
     return arrival_time;
 }
-
+float Flight::get_cost(){
+    return cost;
+}
 
 //destructor
 Flight::~Flight() {

@@ -38,6 +38,7 @@ class Flight{
 		bool was_visited();
 		Time get_flight_departure_time();
 		Time get_flight_arrival_time();
+		float get_cost();
 	private:
 		//store the departure, destination city
 	    string destination, departure;
