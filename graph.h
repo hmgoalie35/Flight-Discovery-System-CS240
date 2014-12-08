@@ -45,7 +45,7 @@ class Graph {
 
 		void print_flight_sched ();								//displays entire Daily Flight schedule
 		void j_itin ();		
-		void j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, bool visited[], vector <Flight> path, Flight currentFlight);
+		void j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight);
 									//Just Get Me There
 		void f_itin ();											//Fewest Hops
 		void c_itin ();											//Cheapest

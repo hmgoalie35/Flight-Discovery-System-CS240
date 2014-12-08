@@ -221,12 +221,9 @@ void Graph::print_flight_sched () {
 
 void Graph::j_itin () {
 	vector<Flight> path;
-	bool visited[cityList.size()];
 	Flight base;
-	for (int i = 0; i < cityList.size(); i++){
-		visited[i] = false;
-	}
-	j_recursive(city_pos(user_depart_city), city_pos(user_depart_city), city_pos(user_destination_city), false, user_depart_time, visited, path, base);
+	
+	j_recursive(city_pos(user_depart_city), city_pos(user_depart_city), city_pos(user_destination_city), false, user_depart_time, path, base);
 	//cout << "The possible flight paths available to travel to " << user_destination_city << " from " << user_depart_city << " and then back again between " << user_depart_time << " and " << user_return_time << " on " << user_depart_date << " are: " << endl;
 	int size = 10000;
 	int shortest;
@@ -240,7 +237,7 @@ void Graph::j_itin () {
 	}
 	float totalCost = 0;
 	TimeLength totalDuration = j_flightPaths[shortest][j_flightPaths[shortest].size() - 1].get_flight_arrival_time() - j_flightPaths[shortest][0].get_flight_departure_time();
-	cout << "\n Trip Itinerary: \n";
+	cout << "\nTrip Itinerary: \n";
 	for (int j = 0; j < j_flightPaths[shortest].size(); j++){
 		totalCost += j_flightPaths[shortest][j].get_cost();
 		cout << j_flightPaths[shortest][j];
@@ -251,35 +248,28 @@ void Graph::j_itin () {
 	}
 	if (j_flightPaths.size() > 0){
 		cout << "Total trip cost: $" << totalCost << endl;
-		cout << "Total trip duration: " << totalDuration << endl;
+		cout << "Total trip duration: " << totalDuration << "\n\n";
 	}
 	if (j_flightPaths.size() < 1){
 		cout << "No possible paths." << endl;
 	}
 }			
 
-void Graph::j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, bool visited[], vector <Flight> path, Flight currentFlight){
-	//visited[current] = true;
+void Graph::j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight){
 	if (current != start){
 		path.push_back(currentFlight);
 	}
-	if (destination == current){
-		destinationReached = true;
-		for (int i = 0; i < cityList.size(); i++){
-			visited[i] = false;
-		}
-	}
+	if (destination == current) destinationReached = true;
 	if (current == start && destinationReached){
 		path.push_back(currentFlight);
 		j_flightPaths.push_back(path);
 		return;
 	}
 	for (int i = 0; i < cityList[current].flightList.size(); i++){
-		bool isVisited = visited[city_pos(cityList[current].flightList[i].get_destination_city())];
 		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
 		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
-		if (!isVisited && ((flightTime > currentTime) || flightTime == currentTime) && arrivalTime < user_return_time){
-			j_recursive(start, city_pos(cityList[current].flightList[i].get_destination_city()), destination, destinationReached, cityList[current].flightList[i].get_flight_arrival_time(), visited, path, cityList[current].flightList[i]);
+		if (((flightTime > currentTime) || flightTime == currentTime) && arrivalTime < user_return_time){
+			j_recursive(start, city_pos(cityList[current].flightList[i].get_destination_city()), destination, destinationReached, cityList[current].flightList[i].get_flight_arrival_time(), path, cityList[current].flightList[i]);
 		}
 	}
 	return;
