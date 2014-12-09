@@ -471,14 +471,19 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 		roundTripTime = TimeLength(0,0);
 		cout << "-------------------DEPARTING TRIP-------------------\n";
 		shortest_travel_time(user_depart_city, user_destination_city, "departing");
+		float tempRoundTripCost = roundTripCost;
+		int tempRoundTripHops = roundTripHops;
+		TimeLength tempRoundTripTime = roundTripTime;
 
 		if(roundTripCost != 0 && roundTripHops != 0 && !(roundTripTime == TimeLength(0,0))){
 			cout << "-------------------RETURNING TRIP-------------------\n";
 			shortest_travel_time(user_destination_city, user_depart_city, "returning");
-			cout << "-------------------ROUND TRIP-------------------\n";
-			cout << "The cost for round trip is: " << "$" << roundTripCost << endl;
-			cout << "The total number of hops for the round trip is: " << roundTripHops << endl;
-			cout << "The total trip time for the round trip is: " << roundTripTime << endl << endl;
+			if(roundTripCost > tempRoundTripCost && roundTripHops > tempRoundTripHops &&  roundTripTime > tempRoundTripTime){
+				cout << "-------------------ROUND TRIP-------------------\n";
+				cout << "The cost for round trip is: " << "$" << roundTripCost << endl;
+				cout << "The total number of hops for the round trip is: " << roundTripHops << endl;
+				cout << "The total trip time for the round trip is: " << roundTripTime << endl << endl;
+			}
 		}else{
 			cout << "-------------------RETURNING TRIP-------------------\n";
 			cout << "There is no flight within the given constraints from " << user_destination_city << " to " << user_depart_city << endl;
@@ -511,10 +516,18 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 			int city_index = city_pos(f.get_destination_city());
 			for(unsigned i = 0; i < cityList[city_index].flightList.size(); i++){
 				if(d[city_pos(cityList[city_index].flightList[i].get_departure_city())] > (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration())){
-					if(f.get_flight_departure() > previous_departure){
-						d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
-						shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
-						previous_departure = f.get_flight_departure();
+					if(mode == "departing"){
+						if(f.get_flight_departure() > previous_departure || f.get_flight_departure() > user_depart_time){
+							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
+							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
+							previous_departure = f.get_flight_departure();
+						}
+					}else if(mode == "returning"){
+						if(f.get_flight_departure() > previous_departure || f.get_flight_departure() > user_return_time){
+							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
+							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
+							previous_departure = f.get_flight_departure();
+						}
 					}
 				}
 			}
