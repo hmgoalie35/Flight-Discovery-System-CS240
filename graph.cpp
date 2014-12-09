@@ -3,6 +3,7 @@
 #include <climits>
 #include <queue>
 #include <algorithm>
+#include <iomanip>
 //constructor
 Graph::Graph() { }
 
@@ -219,10 +220,10 @@ The itinerary also includes return trip information---a list of flights starting
 //get there in fewest hops w/ breadth first search
  void Graph::f_itin () {
  	cout << "Fewest Hops Itinerary chosen." << endl;
-	TimeLength set_zero(0,0);
-	roundTripTime = set_zero;
-	roundTripCost = 0;
-	roundTripHops = 0;	
+ 	TimeLength set_zero(0,0);
+ 	roundTripTime = set_zero;
+ 	roundTripCost = 0;
+ 	roundTripHops = 0;	
 	vector<Flight> depart_journey(breadthFirst(user_depart_city, user_destination_city, user_depart_time));		//shortest hops to destination
 	if (depart_journey.size() != 0) {
 		cout << endl << "DEPARTURE TRIP ON " << user_depart_date << ":" << endl;		
@@ -331,9 +332,9 @@ void Graph::print_results(vector<Flight> &breadth_results) {
 		if (breadth_results[j].get_destination_city() == prev) {
 			if ( breadth_results[j].get_flight_arrival() > compareFlightTime) {						//if depart time for next flight is before current flight's depart time, the next flight must be taken the following day
 				delay = (compareFlightTime + breadth_results[j].get_flight_departure());			//^^ if the arrival time of one flight precedes the departure time of another flight (from the same city), then the traveler can "make" that flight. 
-				totalTripTime = totalTripTime - path[0].get_flight_duration();
-				path[0].add_time_duration(delay);		
-				totalTripTime = totalTripTime + path[0].get_flight_duration();				
+			totalTripTime = totalTripTime - path[0].get_flight_duration();
+			path[0].add_time_duration(delay);		
+			totalTripTime = totalTripTime + path[0].get_flight_duration();				
 				compareFlightTime = breadth_results[j].get_flight_departure();							//reset flight departure time
 			}		
 			totalTripTime = totalTripTime + breadth_results[j].get_flight_duration();
@@ -389,7 +390,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 			Flight f(cityList[city_pos(vertex)].flightList[i]);															//create Flight object for each element
 			if ( !f.was_visited() ) {																					//if flight is distinct:
 				if (f.get_departure_city() == departCity && f.get_flight_departure() < departTime ){}					//if first flight leaves before the user wants to start trip (departure and return), skip this flight
-				else {
+					else {
 					if ( f.get_destination_city() == departCity) set_all_visited( f.get_destination_city() );			//this ensures flights with initial city's name (departCity) is not visited and departCity is not added to final vector.			
 					else {
 						if ( !(destination_reached) ) {
@@ -399,16 +400,16 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 						}
 					}
 		 			if ( f.get_destination_city() == retCity) destination_reached = true;								//final city has been visited once.
-				}
-			}
-		}	
-	}
-	if (!(cityList[retCityPos]).visited && cityDeque.empty()) {
-		cout << "Shortest path could not be found. Check flight listings and flight times." << endl << endl;
-		vector<Flight> fail(0);
-		return fail;
-	} 
-	return legs;
+		 		}
+		 	}
+		 }	
+		}
+		if (!(cityList[retCityPos]).visited && cityDeque.empty()) {
+			cout << "Shortest path could not be found. Check flight listings and flight times." << endl << endl;
+			vector<Flight> fail(0);
+			return fail;
+		} 
+		return legs;
 
 
 	//TWO HOPS
@@ -458,67 +459,102 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 	// }
 	// if (!(cityList[retCityPos]).visited && cityDeque.empty()) cout << "Shortest path could not be found. Check flight listings and flight times." << endl;
 	// return legs;
-}
-
-void Graph::c_itin () {
-	cout << "C function call not yet implemented." << endl;
-} 					
-
-void Graph::s_itin () {
-	cout << "The shortest departing trip is via the following flights: \n\n";
-	shortest_travel_time(user_depart_city, user_destination_city);
-	cout << "The shortest return trip is via the following flights: \n\n";
-	shortest_travel_time(user_destination_city, user_depart_city);
-}
-
-void Graph::shortest_travel_time(string departure, string arrival){
-	int source_index = city_pos(departure);
-	vector<TimeLength> d;
-	for(unsigned i = 0; i < cityList.size(); i++){
-		d.push_back(TimeLength(1000000,0));
 	}
-	d[source_index] = TimeLength(0, 0);
-	vector<Flight> shortest_path_list(cityList.size()), Q;
-	for(unsigned i = 0; i < cityList.size(); i++){
-		for(unsigned j = 0; j < cityList[i].flightList.size(); j++){
-			Q.push_back(cityList[i].flightList[j]);
-		}
-	}
-	while(!Q.empty()){
-		Flight f = Q.front();
-		Q.erase(Q.begin());
-        //add in time constraint check.
-		int city_index = city_pos(f.get_destination_city());
-		for(unsigned i = 0; i < cityList[city_index].flightList.size(); i++){
-			if(d[city_pos(cityList[city_index].flightList[i].get_departure_city())] > (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration())){
-				d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
-				shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
-			}
-		}
-	}
-	vector<Flight> final_list;
-	string current_city = arrival;
-	while(current_city != departure){
-		if(shortest_path_list[city_pos(current_city)].get_departure_city() != ""){
-			final_list.push_back(shortest_path_list[city_pos(current_city)]);
-			current_city = shortest_path_list[city_pos(current_city)].get_departure_city();
+
+	void Graph::c_itin () {
+		cout << "C function call not yet implemented." << endl;
+	} 					
+
+	void Graph::s_itin () {
+		roundTripCost = 0;
+		roundTripHops = 0;
+		roundTripTime = TimeLength(0,0);
+		cout << "-------------------DEPARTING TRIP-------------------\n";
+		shortest_travel_time(user_depart_city, user_destination_city, "departing");
+
+		if(roundTripCost != 0 && roundTripHops != 0 && !(roundTripTime == TimeLength(0,0))){
+			cout << "-------------------RETURNING TRIP-------------------\n";
+			shortest_travel_time(user_destination_city, user_depart_city, "return");
+			cout << "-------------------ROUND TRIP-------------------\n";
+			cout << "The cost for round trip is: " << "$" << roundTripCost << endl;
+			cout << "The total number of hops for the round trip is: " << roundTripHops << endl;
+			cout << "The total trip time for the round trip is: " << roundTripTime << endl << endl;
 		}else{
-			break;
+			cout << "-------------------RETURNING TRIP-------------------\n";
+			cout << "There is no flight within the given constraints from " << user_destination_city << " to " << user_depart_city << endl;
 		}
+
 	}
-	if(d[city_pos(arrival)] == TimeLength(1000000,0)){
-		cout << "There is no flight within the given constraints from " << departure << " to " << arrival << endl;
-	}else{
-		for(int i = final_list.size() - 1; i >= 0; i--){
-			if(i == 0){
-				cout << final_list[i] << endl;
-			}else{
-				cout << final_list[i]  << "           |" << endl << "           |" << endl << "           v\n";
+
+	void Graph::shortest_travel_time(string departure, string arrival, string mode){
+		int source_index = city_pos(departure);
+		vector<TimeLength> d;
+		for(unsigned i = 0; i < cityList.size(); i++){
+			d.push_back(TimeLength(1000000,0));
+		}
+		d[source_index] = TimeLength(0, 0);
+		vector<Flight> shortest_path_list(cityList.size()), Q;
+		for(unsigned i = 0; i < cityList.size(); i++){
+			for(unsigned j = 0; j < cityList[i].flightList.size(); j++){
+				Q.push_back(cityList[i].flightList[j]);
 			}
 		}
-		cout << "The total trip time is: " << d[city_pos(arrival)] << endl << endl;
-	}	
-}
+		Time previous_departure;
+		if(mode == "departing"){
+			previous_departure = user_depart_time;
+		}else if(mode == "returning"){
+			previous_departure = user_return_time;
+		}
+		while(!Q.empty()){
+			Flight f = Q.front();
+			Q.erase(Q.begin());
+			int city_index = city_pos(f.get_destination_city());
+			for(unsigned i = 0; i < cityList[city_index].flightList.size(); i++){
+				if(d[city_pos(cityList[city_index].flightList[i].get_departure_city())] > (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration())){
+					if(f.get_flight_departure() > previous_departure){
+						d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
+						shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
+						previous_departure = f.get_flight_departure();
+					}
+				}
+			}
+		}
+		vector<Flight> final_list;
+		string current_city = arrival;
+		while(current_city != departure){
+			if(shortest_path_list[city_pos(current_city)].get_departure_city() != ""){
+				final_list.push_back(shortest_path_list[city_pos(current_city)]);
+				current_city = shortest_path_list[city_pos(current_city)].get_departure_city();
+			}else{
+				break;
+			}
+		}
+		if(d[city_pos(arrival)] == TimeLength(1000000,0)){
+			cout << "There is no flight within the given constraints from " << departure << " to " << arrival << endl;
+		}else{
+			cout << "The shortest " << mode << " trip is via the following flight(s): \n\n";
+			float cost = 0;
+			TimeLength the_time(0,0);
+			for(int i = final_list.size() - 1; i >= 0; i--){
+				if(i == 0){
+					cost += final_list[i].get_cost();
+					the_time = the_time + final_list[i].get_flight_duration();
+					cout << final_list[i] << endl;
+				}else{
+					cost += final_list[i].get_cost();
+					the_time = the_time + final_list[i].get_flight_duration();
+					cout << final_list[i]  << "           |" << endl << "           |" << endl << "           v\n";
+				}
+			}
+
+			cout << "The cost for the trip is: " << "$" << cost << endl;
+			cout << "The number of hops for the trip is: " << final_list.size() << endl;
+			cout << "The trip time is: " << the_time << endl;
+			roundTripCost += cost;
+			roundTripTime = roundTripTime + the_time;
+			roundTripHops += final_list.size();
+		}	
+	}
 
 /*
 Once a city name has appeared in the flightList within a certain city struct, all flights with this name are marked as visited.
