@@ -205,9 +205,9 @@ void Graph::j_itin () {
 	
 	j_recursive(city_pos(user_depart_city), city_pos(user_depart_city), city_pos(user_destination_city), false, user_depart_time, path, base);
 	//cout << "The possible flight paths available to travel to " << user_destination_city << " from " << user_depart_city << " and then back again between " << user_depart_time << " and " << user_return_time << " on " << user_depart_date << " are: " << endl;
-	int size = 10000;
+	size_t size = 10000;
 	int shortest;
-	int i;
+	size_t i;
 	if (j_flightPaths.size() > 0){
 		for (i = 0; i < j_flightPaths.size(); i++){
 			if (j_flightPaths[i].size() < size){
@@ -219,7 +219,7 @@ void Graph::j_itin () {
 		float totalCost = 0;
 		TimeLength totalDuration = j_flightPaths[shortest][j_flightPaths[shortest].size() - 1].get_flight_arrival_time() - j_flightPaths[shortest][0].get_flight_departure_time();
 		cout << "\nTrip Itinerary: \n";
-		for (int j = 0; j < j_flightPaths[shortest].size(); j++){
+		for (size_t j = 0; j < j_flightPaths[shortest].size(); j++){
 			totalCost += j_flightPaths[shortest][j].get_cost();
 			cout << j_flightPaths[shortest][j];
 			if (j != j_flightPaths[shortest].size() - 1){
@@ -229,7 +229,7 @@ void Graph::j_itin () {
 		}
 		cout << "=================================\n";
 		cout << "Total Round-Trip Cost: $" << totalCost << endl;
-		cout << "Total Round-Trip Hops: " << size + 1 << endl;
+		cout << "Total Round-Trip Hops: " << size << endl;
 		cout << "Total Round-Trip Time: " << totalDuration << endl;
 		cout << "=================================\n\n";
 	}
@@ -249,7 +249,7 @@ void Graph::j_recursive(int start, int current, int destination, bool destinatio
 		j_flightPaths.push_back(path);
 		return;
 	}
-	for (int i = 0; i < cityList[current].flightList.size(); i++){
+	for (size_t i = 0; i < cityList[current].flightList.size(); i++){
 		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
 		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
 		if (((flightTime > currentTime) || flightTime == currentTime) && arrivalTime < user_return_time){
@@ -286,7 +286,6 @@ void Graph::print_results(vector<Flight> breadth_results) {
 	int totalHops = 0;
 	float totalCost = 0.0;
 	TimeLength totalTripTime(0,0);
-	TimeLength delay(0,0);
 	TimeLength day(24,0);
 	TimeLength reset(0,0);
 	deque<Flight> path;
@@ -297,21 +296,13 @@ void Graph::print_results(vector<Flight> breadth_results) {
 	for (int j = end_index - 1; j >= 0; j--) {
 		string prev = path[0].get_departure_city();
 		compareFlightTime = path[0].get_flight_departure();
-		delay = reset;		
 		if (breadth_results[j].get_destination_city() == prev) {
-			if ( breadth_results[j].get_flight_arrival() > compareFlightTime) {						//if depart time for next flight is before current flight's depart time, the next flight must be taken the following day
-				delay = (compareFlightTime + breadth_results[j].get_flight_departure());			//^^ if the arrival time of one flight precedes the departure time of another flight (from the same city), then the traveler can "make" that flight. 
-				totalTripTime = totalTripTime - path[0].get_flight_duration();
-				path[0].add_time_duration(delay);		
-				totalTripTime = totalTripTime + path[0].get_flight_duration();				
-				compareFlightTime = breadth_results[j].get_flight_departure();							//reset flight departure time
-			}		
-			//totalTripTime = totalTripTime + breadth_results[j].get_flight_duration();
 			path.push_front(breadth_results[j]);
 			totalTripTime = totalTripTime + breadth_results[j].get_flight_duration();						
-			totalCost += breadth_results[j].get_cost();
+ 			totalCost += breadth_results[j].get_cost();
 		}
 	}
+	//check for layover times
 	for (size_t i = 0; i < path.size() - 1; i++){
 		if(path[i].get_flight_arrival() > path[i+1].get_flight_departure() ){
 			totalTripTime = totalTripTime - path[i+1].get_flight_duration();
@@ -341,7 +332,6 @@ void Graph::print_results(vector<Flight> breadth_results) {
 	reset_breadth_first();																							//reset city struct variables
 	reset_all_visited();																							//reset flight visited value		
 	totalTripTime = reset;
-	delay = reset;
 	//======================//
 }
 
