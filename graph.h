@@ -42,7 +42,7 @@ class Graph {
 		bool set_return_time(string user_choice);
 		/*======================================*/
 
-		void print_results(vector<Flight> &breadth_results);	//prints results for Fewest Hops itinerary
+		void print_results(vector<Flight> breadth_results);		//prints results for Fewest Hops itinerary
 		void print_flight_sched();								//displays entire Daily Flight schedule
 		void j_itin();											//Just Get Me There
 		void f_itin();											//Fewest Hops

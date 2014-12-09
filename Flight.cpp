@@ -93,7 +93,7 @@ int Flight::get_distance() {
 }
 
 //add time to flight duration
-void Flight::add_time_duration(TimeLength newTime) {
+void Flight::set_time_duration(TimeLength newTime) {
     flight_duration = newTime;
 }
 

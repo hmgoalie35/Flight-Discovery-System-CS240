@@ -49,7 +49,7 @@ class Flight{
 		//set visited to new value
 		void set_visited(bool);
 		//add time to flight duration
-		void add_time_duration(TimeLength delay);
+		void set_time_duration(TimeLength delay);
 
 	private:
 		//store the departure, destination city

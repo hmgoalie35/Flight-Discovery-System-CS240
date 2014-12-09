@@ -1,8 +1,8 @@
-Boston
-Philadelphia
+NewYork
+Maui
 04/12/2014
 2:15am
-04/12/2014
-5:00pm
+05/12/2014
+10:00am
 F
 Quit
