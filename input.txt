@@ -1,8 +1,8 @@
-NewYork
-Maui
-04/12/2014
+Boston
+Philadelphia
+01/03/2014
 2:15am
-05/12/2014
-10:00am
+02/03/2014
+11:59pm
 F
 Quit

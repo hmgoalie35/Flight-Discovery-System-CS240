@@ -48,3 +48,5 @@ LosAngeles Seattle 10:11am 11:22am $51
 Seattle Chicago 2:22pm 5:03pm $111
 Seattle Houston 4:17pm 7:41pm $111
 Houston Seattle 9:42am 1:10pm $122
+KansasCity Philadelphia 9:02pm 10:04pm $101
+Chicago KansasCity 8:01pm 9:01pm $84

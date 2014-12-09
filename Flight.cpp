@@ -13,8 +13,8 @@ Flight::Flight(string the_departure, string the_destination, Time the_departure_
     departure_time = the_departure_time;
     arrival_time = the_arrival_time;
     flight_duration = arrival_time - departure_time;
-    distance = 0;
     visited = false;
+    distance = 0;
 }
 //Prints out a Flight object. Formatted as Departure, Destination, Departure Time, Arrival Time, Cost, Flight Duration.
 ostream& operator<< (ostream& out, const Flight& flight) {
@@ -25,6 +25,10 @@ ostream& operator<< (ostream& out, const Flight& flight) {
 //checks to see if one flight has a shorter duration than the other
 bool Flight::operator<(const Flight& flight) const{
     return (this->flight_duration < flight.flight_duration);
+}
+
+void Flight::clear_distance(){
+    distance = 0;
 }
 
 //checks to see if one flight has a longer duration than the other
@@ -42,6 +46,7 @@ bool Flight::operator==(const Flight& flight) const{
 TimeLength Flight::get_flight_duration(){
     return flight_duration;
 }
+
 
 //return the flight departure time
 Time Flight::get_flight_departure() {
@@ -73,23 +78,18 @@ bool Flight::was_visited(){
     return visited;
 }
 
-void Flight::clear_distance() {
-    distance = 0;
+Time Flight::get_flight_departure_time(){
+    return departure_time;
+}
+Time Flight::get_flight_arrival_time(){
+    return arrival_time;
 }
 
-//return flight cost
-float Flight::get_cost(){
-    return cost;
-}
 
 //change this flight's distance
-void Flight::set_distance(int new_value) {
-    distance = new_value;
-}
 
-//return this flight's distance
-int Flight::get_distance() {
-    return distance;
+float Flight::get_cost(){
+    return cost;
 }
 
 //add time to flight duration
