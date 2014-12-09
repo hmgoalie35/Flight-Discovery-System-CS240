@@ -474,7 +474,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 
 		if(roundTripCost != 0 && roundTripHops != 0 && !(roundTripTime == TimeLength(0,0))){
 			cout << "-------------------RETURNING TRIP-------------------\n";
-			shortest_travel_time(user_destination_city, user_depart_city, "return");
+			shortest_travel_time(user_destination_city, user_depart_city, "returning");
 			cout << "-------------------ROUND TRIP-------------------\n";
 			cout << "The cost for round trip is: " << "$" << roundTripCost << endl;
 			cout << "The total number of hops for the round trip is: " << roundTripHops << endl;
