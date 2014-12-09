@@ -24,12 +24,16 @@ Time::Time(string t) : daysPast(0){
 Time::Time(int newHours,int newMins,bool newAM) : militaryHours(newHours), mins(newMins), AM(newAM) {
 	hours = militaryHours;
 	if (!AM) hours -=12;
-	if (militaryHours >= 24){
+	while (militaryHours >= 24){
 		hours -=12;
 		militaryHours -=24;
 		daysPast +=1;
 	}
-	if (militaryHours < 12) AM = true;
+	if (militaryHours < 12) {
+		AM = true;
+	} else {
+		AM = false;
+	}
 
 }
 
@@ -56,8 +60,9 @@ bool Time::operator< (Time t2){
 TimeLength Time::operator- (Time t2){
 	int newHours;
 	int newMins;
-	if (*this > t2){
+	if (*this > t2 || daysPast > t2.daysPast){
 		newHours = militaryHours - t2.militaryHours;
+		newHours += (daysPast * 24) - (t2.daysPast * 24);
 		if (mins > t2.mins || mins == t2.mins){
 			newMins = mins - t2.mins;
 		}
@@ -66,11 +71,12 @@ TimeLength Time::operator- (Time t2){
 			newMins = 60 + tempMins;
 			newHours -=1;
 		}
-	} else if (*this == t2){
+	} else if (*this == t2 && daysPast == t2.daysPast){
 		newHours = 0;
 		newMins = 0;
 	} else {
 		newHours = t2.militaryHours - militaryHours;
+		newHours += (t2.daysPast * 24) - (daysPast * 24);
 		if (t2.mins > mins || t2.mins == mins){
 			newMins = t2.mins - mins;
 		}
@@ -80,6 +86,7 @@ TimeLength Time::operator- (Time t2){
 			newHours -=1;
 		}
 	}
+
 	TimeLength length(newHours,newMins);
 	return length;
 }

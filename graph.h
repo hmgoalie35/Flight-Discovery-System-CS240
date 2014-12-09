@@ -30,6 +30,7 @@ class Graph {
 		vector<Flight> breadthFirst(const string &departCity, const string &retCity, Time &departTime);
 		void shortest_travel_time(string, string, string);
 
+		vector< vector<Flight> > j_flightPaths;
 		void set_all_visited(string city);						//once a certain city name has been seen, all cities with that name are marked as visited. Used in breadth first search
 		void reset_all_visited();								//set all flights in a city to not visited
 		void reset_breadth_first();								//resets all City values changed from breadth first search
@@ -43,13 +44,14 @@ class Graph {
 		bool set_return_time(string user_choice);
 		/*======================================*/
 
-		void print_results(vector<Flight> &breadth_results);	//prints results for Fewest Hops itinerary
+		void print_results(vector<Flight> breadth_results);		//prints results for Fewest Hops itinerary
 		void print_flight_sched();								//displays entire Daily Flight schedule
 		void j_itin();											//Just Get Me There
 		void f_itin();											//Fewest Hops
 		void c_itin();											//Cheapest
 		void s_itin();											//Shortest Trip
-
+		void j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight);
+	
 	private:
 
 		/*====values from file=====*/		
