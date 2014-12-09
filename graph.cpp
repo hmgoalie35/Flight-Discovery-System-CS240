@@ -401,104 +401,159 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 		cout << "C function call not yet implemented." << endl;
 	} 					
 
+	/*
+		Used to print out the results from running the shortest path algorithm. If there is no departing flight, then we don't bother
+		looking for a return flight. 
+	*/
 	void Graph::s_itin () {
+		//initialize global variables to 0
 		roundTripCost = 0;
 		roundTripHops = 0;
 		roundTripTime = TimeLength(0,0);
+		//departing trip
 		cout << "-------------------DEPARTING TRIP-------------------\n";
+		//run the algorithm from departure city to destination city
 		shortest_travel_time(user_depart_city, user_destination_city, "departing");
+		//the above function updates the global variables roundTripCost, etc. These values have only been updated once so we know they only represent a one way trip.
 		float tempRoundTripCost = roundTripCost;
 		int tempRoundTripHops = roundTripHops;
 		TimeLength tempRoundTripTime = roundTripTime;
-
+		//check to see if we found a departing flight. If not then dont bother with a return flight.
 		if(roundTripCost != 0 && roundTripHops != 0 && !(roundTripTime == TimeLength(0,0))){
+			//run the algorithm for the return trip.
 			cout << "-------------------RETURNING TRIP-------------------\n";
 			shortest_travel_time(user_destination_city, user_depart_city, "returning");
+			//if we found a return trip, then the algorithm would have updated the previous global variables roundTripCost, roundTripHops, etc.
+			//so we stored those old values and check to see if the global variable values changed.
 			if(roundTripCost > tempRoundTripCost && roundTripHops > tempRoundTripHops &&  roundTripTime > tempRoundTripTime){
+				//print the round trip info if we found both a departure trip and return trip.
 				cout << "-------------------ROUND TRIP-------------------\n";
 				cout << "The cost for round trip is: " << "$" << roundTripCost << endl;
 				cout << "The total number of hops for the round trip is: " << roundTripHops << endl;
 				cout << "The total trip time for the round trip is: " << roundTripTime << endl << endl;
 			}
 		}else{
+			//notify the user there is no return trip
 			cout << "-------------------RETURNING TRIP-------------------\n";
 			cout << "There is no flight within the given constraints from " << user_destination_city << " to " << user_depart_city << endl;
 		}
 
 	}
 
+	//shortest time via dijsktra. Takes in departure and arrival city and the mode. mode is used to use the correct departure or arrival time the user specified
+	//based on if they are departing or returning.
 	void Graph::shortest_travel_time(string departure, string arrival, string mode){
+		//city_pos returns the index of the departure param in the cityList. so store this index
 		int source_index = city_pos(departure);
+		//create vector used to store current shortest time to get to the city. the city is keyed via its index. as cities that don't already exist in the graph are encountered
+		//they are added to the cityList. if we add boston, philly, ny, dc. then index 0 will correspond to boston, index 1 will correspond to philly, etc.
 		vector<TimeLength> d;
+		//for however many citites there are in the cityList, initialize all of the current shortest trips to a large number (i.e. infinity)
 		for(unsigned i = 0; i < cityList.size(); i++){
+			//since we are representing flight lengths in TimeLength objects, push a new TimeLength initialized to a very large value
 			d.push_back(TimeLength(1000000,0));
 		}
+		//set the current shortest flight at the source index to 0. because we know how to get from the source to the source in a weight of 0.
 		d[source_index] = TimeLength(0, 0);
+		//initialize a vector of Flights used to store the current flight that is the shortest to that specific city. shortest_path_list is indexed by the city's name
+		//by using city_pos(city_name). Q is used to store every flight in the whole graph.
 		vector<Flight> shortest_path_list(cityList.size()), Q;
+		//go through every city
 		for(unsigned i = 0; i < cityList.size(); i++){
+			//go through every flight you can take leaving the current city.
 			for(unsigned j = 0; j < cityList[i].flightList.size(); j++){
+				//add that flight to Q.
+				//we are simply adding every flight in the graph to Q.
 				Q.push_back(cityList[i].flightList[j]);
 			}
 		}
+		//store the previous departure time to be used for comparison to make sure the current "relaxed" flight departs after the previous flight returns.
 		Time previous_departure;
+		//if the mode is departing we want to use the user's specified depart time
+		//else use the user's specified return time.
 		if(mode == "departing"){
 			previous_departure = user_depart_time;
 		}else if(mode == "returning"){
 			previous_departure = user_return_time;
 		}
+		//iterate through every flight in the graph.
 		while(!Q.empty()){
+			//take the first flight off the front of the vector. (these are not sorted in any special way)
 			Flight f = Q.front();
+			//remove the currently selected flight from Q
 			Q.erase(Q.begin());
+			//get the index to be used to access the shortest_path_list vector as well as the d vector.
+			//this is so we update the correct destination city's values. (current shortest time to get to that city & the actual flight that would get us there the quickest.)
 			int city_index = city_pos(f.get_destination_city());
+			//iterate through every flight leaving from the destination city of the flight we chose from Q.
 			for(unsigned i = 0; i < cityList[city_index].flightList.size(); i++){
+				//if the current least time it takes to get to the current flight's departure city > current least time it takes to get to the removed flights departure city + the removed city's flight duration
 				if(d[city_pos(cityList[city_index].flightList[i].get_departure_city())] > (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration())){
+					//if the mode is departing we want to know if the selected flight departs after the previous flight 
 					if(mode == "departing"){
+						//make sure the flight we are considering leaves after the specified departure time and after the previous flights arrival time
 						if(f.get_flight_departure() > previous_departure || f.get_flight_departure() > user_depart_time){
+							//set the current minimum time to get to the specific city to the relaxed value.
 							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
+							//add this flight to the index that is storing the current shortest flights to the specific city
 							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
-							previous_departure = f.get_flight_departure();
+							//store the current flights arrival for comparison
+							previous_departure = f.get_flight_arrival();
 						}
+					//if the mode is returning we do the same as above but compare with the user specified return time.
 					}else if(mode == "returning"){
 						if(f.get_flight_departure() > previous_departure || f.get_flight_departure() > user_return_time){
 							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
 							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
-							previous_departure = f.get_flight_departure();
+							previous_departure = f.get_flight_arrival();
 						}
 					}
 				}
 			}
 		}
+		//vector to store the final flights
 		vector<Flight> final_list;
+		//the arrival city, used to loop until we get to the departure city.
 		string current_city = arrival;
 		while(current_city != departure){
+			//make sure we aren't pushing any garbage values into our final list
 			if(shortest_path_list[city_pos(current_city)].get_departure_city() != ""){
+				//add the flight at the current city index. the index of shortest path list keyed by a specific city name gives us the shortest flight it took to get there.
 				final_list.push_back(shortest_path_list[city_pos(current_city)]);
+				//update the current city to the determined flights departure city.
 				current_city = shortest_path_list[city_pos(current_city)].get_departure_city();
 			}else{
+				//if we hit a garbage value break.
 				break;
 			}
 		}
+		//if the current weight of the arrival city's index is what we set it to originally, there were no flights to that city.
 		if(d[city_pos(arrival)] == TimeLength(1000000,0)){
 			cout << "There is no flight within the given constraints from " << departure << " to " << arrival << endl;
 		}else{
+			//we found a shortest path. so iterate backwards through the final list.
 			cout << "The shortest " << mode << " trip is via the following flight(s): \n\n";
+			//used to compute total cost
 			float cost = 0;
 			TimeLength the_time(0,0);
 			for(int i = final_list.size() - 1; i >= 0; i--){
 				if(i == 0){
+					//accumulate the cost and time by adding up costs of all flights
 					cost += final_list[i].get_cost();
 					the_time = the_time + final_list[i].get_flight_duration();
 					cout << final_list[i] << endl;
 				}else{
+					//accumulate the cost and time by adding up costs of all flights.
 					cost += final_list[i].get_cost();
 					the_time = the_time + final_list[i].get_flight_duration();
 					cout << final_list[i]  << "           |" << endl << "           |" << endl << "           v\n";
 				}
 			}
-
+			//print out results.
 			cout << "The cost for the trip is: " << "$" << cost << endl;
 			cout << "The number of hops for the trip is: " << final_list.size() << endl;
 			cout << "The trip time is: " << the_time << endl;
+			//update global variables so we can store total round trip cost when this function is called for return journey.
 			roundTripCost += cost;
 			roundTripTime = roundTripTime + the_time;
 			roundTripHops += final_list.size();

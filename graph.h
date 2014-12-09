@@ -28,6 +28,7 @@ class Graph {
 		int city_pos (string cityName);							//get index of cityName in cityList
 
 		vector<Flight> breadthFirst(const string &departCity, const string &retCity, Time &departTime);
+		//used to compute the shortest travel time.
 		void shortest_travel_time(string, string, string);
 
 		vector< vector<Flight> > j_flightPaths;
