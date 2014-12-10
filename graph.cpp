@@ -492,7 +492,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 					//if the mode is departing we want to know if the selected flight departs after the previous flight 
 					if(mode == "departing"){
 						//make sure the flight we are considering leaves after the specified departure time and after the previous flights arrival time
-						if(f.get_flight_departure() > previous_departure || f.get_flight_departure() > user_depart_time){
+						if(f.get_flight_departure() > previous_departure && f.get_flight_departure() > user_depart_time){
 							//set the current minimum time to get to the specific city to the relaxed value.
 							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
 							//add this flight to the index that is storing the current shortest flights to the specific city
@@ -502,7 +502,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 						}
 					//if the mode is returning we do the same as above but compare with the user specified return time.
 					}else if(mode == "returning"){
-						if(f.get_flight_departure() > previous_departure || f.get_flight_departure() > user_return_time){
+						if(f.get_flight_departure() > previous_departure && f.get_flight_departure() > user_return_time){
 							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
 							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
 							previous_departure = f.get_flight_arrival();
