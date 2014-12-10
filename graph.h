@@ -51,8 +51,7 @@ class Graph {
 		void f_itin();											//Fewest Hops
 		void c_itin();											//Cheapest
 		void s_itin();											//Shortest Trip
-		void j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight);
-	
+		void j_recursive(int start, int current, int destination, Time currentTime, vector <Flight> path, Flight currentFlight);
 	private:
 
 		/*====values from file=====*/		
