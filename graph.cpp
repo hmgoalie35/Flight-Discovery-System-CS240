@@ -211,65 +211,115 @@ specified Trip Constraints and Objectives.
 The itinerary also includes return trip information---a list of flights starting at the destination city on the return date,
  and arriving back at the original departure city.
 */
-void Graph::j_itin () {
-	vector<Flight> path;
-	Flight base;
-	
-	j_recursive(city_pos(user_depart_city), city_pos(user_depart_city), city_pos(user_destination_city), false, user_depart_time, path, base);
+ void Graph::j_itin () {
+ 	vector<Flight> path;
+ 	Flight base;
+
+ 	j_recursive(city_pos(user_depart_city), city_pos(user_depart_city), city_pos(user_destination_city), user_depart_time, path, base);
 	//cout << "The possible flight paths available to travel to " << user_destination_city << " from " << user_depart_city << " and then back again between " << user_depart_time << " and " << user_return_time << " on " << user_depart_date << " are: " << endl;
-	size_t size = 10000;
-	int shortest;
-	size_t i;
-	if (j_flightPaths.size() > 0){
-		for (i = 0; i < j_flightPaths.size(); i++){
-			if (j_flightPaths[i].size() < size){
-				size = j_flightPaths[i].size();
-				shortest = i;
-			}	 	
+ 	size_t sizeThere = 10000;
+ 	int shortestThere;
+ 	size_t i;
+ 	int totalCost;
+ 	int totalHops;
+ 	TimeLength totalDuration;
+ 	if (j_flightPaths.size() > 0){
+ 		for (i = 0; i < j_flightPaths.size(); i++){
+ 			if (j_flightPaths[i].size() < sizeThere){
+ 				sizeThere = j_flightPaths[i].size();
+ 				shortestThere = i;
+ 			}	 	
 
-		}
-		float totalCost = 0;
-		TimeLength totalDuration = j_flightPaths[shortest][j_flightPaths[shortest].size() - 1].get_flight_arrival_time() - j_flightPaths[shortest][0].get_flight_departure_time();
-		cout << "\nTrip Itinerary: \n";
-		for (size_t j = 0; j < j_flightPaths[shortest].size(); j++){
-			totalCost += j_flightPaths[shortest][j].get_cost();
-			cout << j_flightPaths[shortest][j];
-			if (j != j_flightPaths[shortest].size() - 1){
-				cout  << "           |" << endl << "           |" << endl << "           v";
-			}
-			cout << "\n";
-		}
-		cout << "=================================\n";
-		cout << "Total Round-Trip Cost: $" << totalCost << endl;
-		cout << "Total Round-Trip Hops: " << size << endl;
-		cout << "Total Round-Trip Time: " << totalDuration << endl;
-		cout << "=================================\n\n";
-	}
-	if (j_flightPaths.size() < 1){
-		cout << "\nNo possible paths.\n\n";
-	}
-}			
+ 		}
+ 		float totalCostThere = 0;
+ 		TimeLength durationThere = j_flightPaths[shortestThere][j_flightPaths[shortestThere].size() - 1].get_flight_arrival_time() - j_flightPaths[shortestThere][0].get_flight_departure_time();
+ 		cout << "-------------------TRIP ITINERARY-------------------\n";
+ 		cout << "-------------------DEPARTING TRIP-------------------\n";
+		cout << "-------------------" << user_depart_date <<"-------------------------\n";
 
+ 		for (size_t j = 0; j < j_flightPaths[shortestThere].size(); j++){
+ 			totalCostThere += j_flightPaths[shortestThere][j].get_cost();
+ 			cout << j_flightPaths[shortestThere][j];
+ 			if (j != j_flightPaths[shortestThere].size() - 1){
+ 				cout  << "           |" << endl << "           |" << endl << "           v";
+ 			}
+ 			cout << "\n";
+ 		}
+ 		cout << "=================================\n";
+ 		cout << "Total One-Way Cost: $" << totalCostThere << endl;
+ 		cout << "Total One-Way Hops: " << sizeThere << endl;
+ 		cout << "Total One-Way Time: " << durationThere << endl;
+ 		cout << "=================================\n\n";
+ 		totalCost = totalCostThere;
+ 		totalHops = sizeThere;
+ 		totalDuration = durationThere;
+ 		j_flightPaths.clear();
+ 		j_recursive(city_pos(user_destination_city), city_pos(user_destination_city), city_pos(user_depart_city), user_return_time, path, base);
+ 		sizeThere = 10000;
+ 		if (j_flightPaths.size() > 0){
+ 			for (i = 0; i < j_flightPaths.size(); i++){
+ 				if (j_flightPaths[i].size() < sizeThere){
+ 					sizeThere = j_flightPaths[i].size();
+ 					shortestThere = i;
+ 				}	 	
 
-void Graph::j_recursive(int start, int current, int destination, bool destinationReached, Time currentTime, vector <Flight> path, Flight currentFlight){
-	if (current != start){
-		path.push_back(currentFlight);
-	}
-	if (destination == current) destinationReached = true;
-	if (current == start && destinationReached){
-		path.push_back(currentFlight);
-		j_flightPaths.push_back(path);
-		return;
-	}
-	for (size_t i = 0; i < cityList[current].flightList.size(); i++){
-		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
-		Time arrivalTime =  cityList[current].flightList[i].get_flight_arrival_time();
-		if (((flightTime > currentTime) || flightTime == currentTime) && arrivalTime < user_return_time){
-			j_recursive(start, city_pos(cityList[current].flightList[i].get_destination_city()), destination, destinationReached, cityList[current].flightList[i].get_flight_arrival_time(), path, cityList[current].flightList[i]);
-		}
-	}
-	return;
-}
+ 			}
+ 			totalCostThere = 0;
+ 			TimeLength durationThere = j_flightPaths[shortestThere][j_flightPaths[shortestThere].size() - 1].get_flight_arrival_time() - j_flightPaths[shortestThere][0].get_flight_departure_time();
+			cout << "-------------------RETURNING TRIP-------------------\n";
+			cout << "-------------------" << user_return_date <<"-------------------------\n";
+
+ 			for (size_t j = 0; j < j_flightPaths[shortestThere].size(); j++){
+ 				totalCostThere += j_flightPaths[shortestThere][j].get_cost();
+ 				cout << j_flightPaths[shortestThere][j];
+ 				if (j != j_flightPaths[shortestThere].size() - 1){
+ 					cout  << "           |" << endl << "           |" << endl << "           v";
+ 				}
+ 				cout << "\n";
+ 			}
+ 			cout << "=================================\n";
+ 			cout << "Total Return Cost: $" << totalCostThere << endl;
+ 			cout << "Total Return Hops: " << sizeThere << endl;
+ 			cout << "Total Return Time: " << durationThere << endl;
+ 			cout << "=================================\n\n";
+ 			
+ 			totalCost += totalCostThere;
+ 			totalHops += sizeThere;
+ 			totalDuration = totalDuration + durationThere;
+			cout << "-------------------ROUND TRIP-------------------\n";
+
+ 			cout << "=================================\n";
+ 			cout << "Total Round-Trip Cost: $" << totalCost << endl;
+ 			cout << "Total Round-Trip Hops: " << totalHops << endl;
+ 			cout << "Total Round-Trip Travel Time: " << totalDuration << endl;
+ 			cout << "=================================\n\n";
+ 		} else {
+ 			cout << "There is no possible returning path in that time." << endl;
+ 		}
+ 		
+ 	} else {
+ 	
+ 		cout << "\nNo possible paths.\n\n";
+ 	}		
+ }
+
+ void Graph::j_recursive(int start, int current, int destination, Time currentTime, vector <Flight> path, Flight currentFlight){
+ 	if (current != start){
+ 		path.push_back(currentFlight);
+ 	}
+ 	if (destination == current) {
+ 		j_flightPaths.push_back(path);
+ 		return;
+ 	}
+
+ 	for (size_t i = 0; i < cityList[current].flightList.size(); i++){
+ 		Time flightTime = cityList[current].flightList[i].get_flight_departure_time();
+ 		if (((flightTime > currentTime) || flightTime == currentTime)){
+ 			j_recursive(start, city_pos(cityList[current].flightList[i].get_destination_city()), destination, cityList[current].flightList[i].get_flight_arrival_time(), path, cityList[current].flightList[i]);
+ 		}
+ 	}
+ 	return;
+ }
 
 //get there in fewest hops w/ breadth first search
  void Graph::f_itin () {
@@ -312,7 +362,7 @@ void Graph::print_results(vector<Flight> breadth_results) {
 		if (breadth_results[j].get_destination_city() == prev) {
 			path.push_front(breadth_results[j]);
 			totalTripTime = totalTripTime + breadth_results[j].get_flight_duration();						
- 			totalCost += breadth_results[j].get_cost();
+			totalCost += breadth_results[j].get_cost();
 		}
 	}
 	//check for layover times
@@ -396,7 +446,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 			return fail;
 		} 
 		return legs;
-		}	
+	}	
 	void Graph::c_itin () {
 		cout << "C function call not yet implemented." << endl;
 	} 					
