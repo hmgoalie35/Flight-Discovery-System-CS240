@@ -446,10 +446,7 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 		} 
 		return legs;
 	}	
-	void Graph::c_itin () {
-		cout << "C function call not yet implemented." << endl;
-	} 					
-
+	
 	/*
 		Used to print out the results from running the shortest path algorithm. If there is no departing flight, then we don't bother
 		looking for a return flight. 
