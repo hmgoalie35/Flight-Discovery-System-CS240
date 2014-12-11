@@ -24,7 +24,6 @@ void Graph::add_flight (string cityInfo[], int size) {
 	add_city(destination_city);
 	Flight f = Flight(departure_city, destination_city, departure_time, arrival_time, cost);
 	cityList[city_pos(departure_city)].flightList.push_back(f);
-	//sort(cityList[city_pos(departure_city)].flightList.begin(), cityList[city_pos(departure_city)].flightList.end());
 }		
 
 //checks if city is in the list of cities
@@ -517,15 +516,6 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 				Q.push_back(cityList[i].flightList[j]);
 			}
 		}
-		//store the previous departure time to be used for comparison to make sure the current "relaxed" flight departs after the previous flight returns.
-		Time previous_departure;
-		//if the mode is departing we want to use the user's specified depart time
-		//else use the user's specified return time.
-		if(mode == "departing"){
-			previous_departure = user_depart_time;
-		}else if(mode == "returning"){
-			previous_departure = user_return_time;
-		}
 		//iterate through every flight in the graph.
 		while(!Q.empty()){
 			//take the first flight off the front of the vector. (these are not sorted in any special way)
@@ -542,20 +532,17 @@ vector<Flight> Graph::breadthFirst (const string &departCity, const string &retC
 					//if the mode is departing we want to know if the selected flight departs after the previous flight 
 					if(mode == "departing"){
 						//make sure the flight we are considering leaves after the specified departure time and after the previous flights arrival time
-						if(f.get_flight_departure() > previous_departure && f.get_flight_departure() > user_depart_time){
+						if(f.get_flight_departure() > user_depart_time){
 							//set the current minimum time to get to the specific city to the relaxed value.
 							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
 							//add this flight to the index that is storing the current shortest flights to the specific city
 							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
-							//store the current flights arrival for comparison
-							previous_departure = f.get_flight_arrival();
 						}
 					//if the mode is returning we do the same as above but compare with the user specified return time.
 					}else if(mode == "returning"){
-						if(f.get_flight_departure() > previous_departure && f.get_flight_departure() > user_return_time){
+						if(f.get_flight_departure() > user_return_time){
 							d[city_pos(cityList[city_index].flightList[i].get_departure_city())] = (d[city_pos(f.get_departure_city())]) + (f.get_flight_duration());
 							shortest_path_list[city_pos(cityList[city_index].flightList[i].get_departure_city())] = f;
-							previous_departure = f.get_flight_arrival();
 						}
 					}
 				}
